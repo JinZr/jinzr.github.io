@@ -1,0 +1,16 @@
+[
+    {
+        "publisher": "INTERSPEECH 2021",
+        "title": "Adversarial Data Augmentation for Disordered Speech Recognition",
+        "link": "https://www.isca-speech.org/archive/pdfs/interspeech_2021/jin21_interspeech.pdf",
+        "author": "Zengrui Jin, Mengzhe Geng, Xurong Xie, Jianwei Yu, Shansong Liu, Xunying Liu, Helen Meng",
+        "year": 2021
+    },
+    {
+        "publisher": "INTERSPEECH 2021",
+        "title": "Spectro-Temporal Deep Features for Disordered Speech Assessment and Recognition",
+        "link": "https://www.isca-speech.org/archive/pdfs/interspeech_2021/geng21b_interspeech.pdf",
+        "author": "Mengzhe Geng, Shansong Liu, Jianwei Yu, Xurong Xie, Shoukang Hu, Zi Ye, Zengrui Jin, Xunying Liu, Helen Meng",
+        "year": 2021
+    }
+]
