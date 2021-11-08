@@ -52,17 +52,19 @@ jobs:
           cd flutter_io_page/io_page
           flutter pub get
           flutter build web
-          cd build/web
           git init
+          git remote add origin https://github.com/JinZr/flutter_io_page
           # type configurations: your user.email and user.name followed lines 
           # git config --global user.email your_email 
           # git config --global user.name your_name 
+          cd build/web
           git config --global user.email zengrui.jin@outlook.com
           git config --global user.name JinZr
           git config --global init.defaultBranch main
-          git add .
           git add --all
           git commit -m "update"
-          git push https://github.com/JinZr/flutter_io_page main
+          git push -u origin
+#         git push https://github.com/JinZr/flutter_io_page main
+
       
 
