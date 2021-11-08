@@ -62,8 +62,9 @@ jobs:
           git config --global user.name JinZr
           git config --global init.defaultBranch main
           git add --all
-          git commit -m "update"
-          git push -u origin
+          git commit -m "updated by CI"
+          git push origin HEAD:main
+#         git push -u origin
 #         git push https://github.com/JinZr/flutter_io_page main
 
       
