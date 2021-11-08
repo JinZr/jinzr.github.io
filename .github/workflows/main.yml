@@ -43,7 +43,6 @@ jobs:
         with:
           flutter-version: '2.5.3'
       - run: flutter config --enable-web
-      - run: flutter pub get
       - run: flutter build web --release
       - run: cd flutter_io_page/io_page; flutter pub get
       - run: cd flutter_io_page/io_page; flutter test
