@@ -61,7 +61,7 @@ jobs:
           git config --global user.email zengrui.jin@outlook.com
           git config --global user.name JinZr
           git config --global init.defaultBranch main
-          git add *
+          git add -f *
           git commit -m "updated by CI"
           git push origin HEAD:main
 #         git push -u origin
