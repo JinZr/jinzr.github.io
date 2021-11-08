@@ -63,6 +63,6 @@ jobs:
           git add .
           git add --all
           git commit -m "update"
-          git push origin HEAD:master
+          git push origin HEAD:main
       
 
