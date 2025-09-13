@@ -1,1 +1,1 @@
-flutter_io_page/io_page/build/web/main.dart.js
+flutter_io_page/build/web/main.dart.js

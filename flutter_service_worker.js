@@ -1,1 +1,1 @@
-flutter_io_page/io_page/build/web/flutter_service_worker.js
+flutter_io_page/build/web/flutter_service_worker.js
