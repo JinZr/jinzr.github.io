@@ -1,0 +1,1 @@
+./flutter_io_page/build/web/flutter.js
