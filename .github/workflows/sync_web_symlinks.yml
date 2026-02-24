@@ -1,0 +1,63 @@
+name: Sync root web symlinks
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - flutter_io_page
+      - .github/scripts/sync_web_symlinks.sh
+      - .github/workflows/sync_web_symlinks.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-root-web-symlinks
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          submodules: true
+
+      - name: Sync root symlinks from flutter_io_page/build/web
+        id: sync
+        run: |
+          set -euo pipefail
+
+          bash .github/scripts/sync_web_symlinks.sh
+
+          if git diff --quiet --exit-code; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push changes
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          git commit -m "chore: sync root symlinks with flutter_io_page/build/web"
+          git push
+
+      - name: Show result
+        run: |
+          if [ "${{ steps.sync.outputs.changed }}" = "true" ]; then
+            echo "Root symlinks updated"
+          else
+            echo "Root symlinks are already up to date"
+          fi
