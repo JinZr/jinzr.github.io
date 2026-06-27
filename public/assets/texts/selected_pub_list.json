@@ -1,18 +1,18 @@
 [
     {
-        "venue": "Proc. ICLR (Oral)",
-        "title": "Zipformer: A faster and better encoder for automatic speech recognition",
-        "link": "https://openreview.net/forum?id=9WD9KwssyT",
-        "author": "Zengwei Yao, Liyong Guo, Xiaoyu Yang, Wei Kang, Fangjun Kuang, Yifan Yang, Zengrui Jin, Long Lin, Daniel Povey",
-        "year": "2024",
-        "theme": "Speech"
-    },
-    {
         "venue": "Proc. ICML",
         "title": "SPEAR: A Unified SSL Framework for Learning Speech and Audio Representations",
         "link": "https://openreview.net/forum?id=vHaaDCLF0M",
         "author": "Xiaoyu Yang, Yifan Yang, Zengrui Jin, Ziyun Cui, Wen Wu, Baoxiang Li, Chao Zhang, Phil Woodland",
         "year": "2026",
+        "theme": "Speech"
+    },
+    {
+        "venue": "Proc. ICLR (Oral)",
+        "title": "Zipformer: A faster and better encoder for automatic speech recognition",
+        "link": "https://openreview.net/forum?id=9WD9KwssyT",
+        "author": "Zengwei Yao, Liyong Guo, Xiaoyu Yang, Wei Kang, Fangjun Kuang, Yifan Yang, Zengrui Jin, Long Lin, Daniel Povey",
+        "year": "2024",
         "theme": "Speech"
     },
     {
@@ -60,7 +60,7 @@
         "title": "BCGNet: An AI Model Trained on 600K Hours of Sleep Data for a Novel Under-Pillow Contactless Monitoring Device",
         "link": "https://www.medrxiv.org/content/10.1101/2025.08.23.25334218v4",
         "author": "Shigeng Chen, Xuesong Chen, Weijun Huang, Fei Lei, Chuxuan Shan, Zengrui Jin, Yunhan Shi, Yichen Wang, Rui Zhao, Xing Xu, Dongsheng Lv, Yanru Li, Shirui Pan, Ambrose Chiang, M. Brandon Westover, Shenda Hong, Chao Zhang, Shankai Yin, Chun-feng Liu, Hongliang Yi, Xiangdong Tang, Yue Leng",
-        "year": "2025",
+        "year": "2026",
         "theme": "Sleep Medicine"
 }
 ]
