@@ -1,0 +1,66 @@
+[
+    {
+        "venue": "ICLR (Oral)",
+        "title": "Zipformer: A faster and better encoder for automatic speech recognition",
+        "link": "https://openreview.net/forum?id=9WD9KwssyT",
+        "author": "Zengwei Yao, Liyong Guo, Xiaoyu Yang, Wei Kang, Fangjun Kuang, Yifan Yang, Zengrui Jin, Long Lin, Daniel Povey",
+        "year": "2024",
+        "theme": "Speech"
+    },
+    {
+        "venue": "ICLR",
+        "title": "CR-CTC: Consistency regularization on CTC for improved speech recognition",
+        "link": "https://openreview.net/forum?id=CIs9x2ZRgh",
+        "author": "Zengwei Yao, Wei Kang, Xiaoyu Yang, Fangjun Kuang, Liyong Guo, Han Zhu, Zengrui Jin, Zhaoqing Li, Long Lin, Daniel Povey",
+        "year": "2025",
+        "theme": "Speech"
+    },
+    {
+        "venue": "IEEE/ACM TASLP",
+        "title": "Personalized Adversarial Data Augmentation for Dysarthric and Elderly Speech Recognition",
+        "link": "https://ieeexplore.ieee.org/abstract/document/10286152",
+        "author": "Zengrui Jin, Mengzhe Geng, Jiajun Deng, Tianzi Wang, Shujie Hu, Guinan Li, Xunying Liu",
+        "year": "2023",
+        "theme": "Speech"
+    },
+    {
+        "venue": "INTERSPEECH",
+        "title": "Adversarial Data Augmentation for Disordered Speech Recognition",
+        "link": "https://www.isca-archive.org/interspeech_2021/jin21_interspeech.html",
+        "author": "Zengrui Jin, Mengzhe Geng, Xurong Xie, Jianwei Yu, Shansong Liu, Xunying Liu, Helen Meng",
+        "year": "2021",
+        "theme": "Speech"
+    },
+    {
+        "venue": "IEEE ICASSP (Oral)",
+        "title": "Towards Automatic Data Augmentation for Disordered Speech Recognition",
+        "link": "https://ieeexplore.ieee.org/document/10447627",
+        "author": "Zengrui Jin, Xurong Xie, Tianzi Wang, Mengzhe Geng, Jiajun Deng, Guinan Li, Shujie Hu, Xunying Liu",
+        "year": "2024",
+        "theme": "Speech"
+    },
+    {
+        "venue": "ICLR",
+        "title": "sleep2vec: Unified Cross-Modal Alignment for Heterogeneous Nocturnal Biosignals",
+        "link": "https://openreview.net/forum?id=DDXhRN66eV",
+        "author": "Weixuan Yuan, Zengrui Jin, Yichen Wang, Donglin Xie, Ziyi Ye, Chao Zhang, Xuesong Chen",
+        "year": "2026",
+        "theme": "Sleep Medicine"
+    },
+    {
+        "venue": "medRxiv (preprint)",
+        "title": "A Zero-Burden Sleep Foundation Model Built on Cardiorespiratory Signals from 800,000+ Hours of Multi-Ethnic Sleep Recordings",
+        "link": "https://www.medrxiv.org/content/10.1101/2025.09.06.25335216v2",
+        "author": "Guangkun Nie, Xuesong Chen, Yichen Wang, Jingxu Chen, Yunhan Shi, Jianwen Zhong, Jie Shi, Chun-feng Liu, Bei Huang, Yaping Liu, Jihui Zhang, Yi Fang, Haoqi Sun, Robert J. Thomas, Weijun Huang, Zengrui Jin, Fei Lei, Leilei Wang, Rui Zhao, Chao Zhang, Kaibing Chen, Dongsheng Lv, Wei Chen, Hongliang Yi, Jun Liu, Yun-Kwok Wing, Hongyan Li, M. Brandon Westover, Lin Lu, Xiangdong Tang, Shankai Yin, Yanru Li, Shenda Hong, Yue Leng",
+        "year": "2025",
+        "theme": "Sleep Medicine"
+    },
+    {
+        "venue": "medRxiv (preprint)",
+        "title": "BCGNet: An AI Model Trained on 600K Hours of Sleep Data for a Novel Under-Pillow Contactless Monitoring Device",
+        "link": "https://www.medrxiv.org/content/10.1101/2025.08.23.25334218v4",
+        "author": "Shigeng Chen, Xuesong Chen, Weijun Huang, Fei Lei, Chuxuan Shan, Zengrui Jin, Yunhan Shi, Yichen Wang, Rui Zhao, Xing Xu, Dongsheng Lv, Yanru Li, Shirui Pan, Ambrose Chiang, M. Brandon Westover, Shenda Hong, Chao Zhang, Shankai Yin, Chun-feng Liu, Hongliang Yi, Xiangdong Tang, Yue Leng",
+        "year": "2025",
+        "theme": "Sleep Medicine"
+}
+]
