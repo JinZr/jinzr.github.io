@@ -12,6 +12,7 @@ import './styles.css';
 
 const baseUrl = import.meta.env.BASE_URL || './';
 const publicUrl = (path) => new URL(`${baseUrl}${path}`, window.location.href).toString();
+const googleAnalyticsId = 'G-4SJNNRFW4C';
 
 const galleryItems = [
   { image: 'assets/images/egs/egs1.webp', full: 'assets/images/egs_highres/egs1.webp', title: 'Dalian' },
@@ -81,6 +82,42 @@ function setupZoomLock() {
     if (!(event.ctrlKey || event.metaKey)) return;
     if (['+', '-', '=', '_', '0'].includes(event.key)) event.preventDefault();
   });
+}
+
+function setupAnalytics() {
+  let scheduled = false;
+
+  const loadAnalytics = () => {
+    if (window.__gaLoaded) return;
+    window.__gaLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag('js', new Date());
+    window.gtag('config', googleAnalyticsId);
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`;
+    document.head.appendChild(script);
+  };
+
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(loadAnalytics, { timeout: 2000 });
+    } else {
+      setTimeout(loadAnalytics, 1500);
+    }
+  };
+
+  if (document.readyState === 'complete') {
+    schedule();
+  } else {
+    window.addEventListener('load', schedule, { once: true });
+  }
 }
 
 function showToast(message) {
@@ -322,6 +359,7 @@ function setupReveal() {
 }
 
 setupZoomLock();
+setupAnalytics();
 setupTopAppBarElevation();
 setupLinks();
 setupEmailCopy();
