@@ -1,10 +1,11 @@
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
-import '@material/web/chips/filter-chip.js';
 import '@material/web/dialog/dialog.js';
 import '@material/web/divider/divider.js';
 import '@material/web/icon/icon.js';
 import '@material/web/iconbutton/icon-button.js';
+import '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
+import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set.js';
 import '@material/web/menu/menu.js';
 import '@material/web/menu/menu-item.js';
 import '@material/web/progress/circular-progress.js';
@@ -192,12 +193,9 @@ function buildPublicationCard(item) {
 
 function renderPublications(items, selectedTheme) {
   const list = document.querySelector('#publication-list');
-  const summary = document.querySelector('#publication-summary');
   const filtered = items.filter((item) => publicationTheme(item) === selectedTheme);
-  const noun = filtered.length === 1 ? 'publication' : 'publications';
 
   list.replaceChildren(...filtered.map(buildPublicationCard));
-  summary.textContent = `Showing ${filtered.length} ${noun} in ${selectedTheme}`;
 }
 
 function renderPublicationFilters(items) {
@@ -205,29 +203,23 @@ function renderPublicationFilters(items) {
   const themes = [...new Set(items.map(publicationTheme))];
   let selectedTheme = themes[0];
 
-  const label = document.createElement('div');
-  label.className = 'filter-label';
-  label.textContent = 'Theme';
+  const themeControl = document.createElement('md-outlined-segmented-button-set');
+  themeControl.className = 'theme-segmented-button-set';
 
-  const chipRow = document.createElement('div');
-  chipRow.className = 'chip-row';
-
-  const chips = themes.map((theme) => {
-    const chip = document.createElement('md-filter-chip');
-    chip.setAttribute('label', theme);
-    chip.selected = theme === selectedTheme;
-    chip.addEventListener('click', () => {
-      selectedTheme = theme;
-      chips.forEach((candidate) => {
-        candidate.selected = candidate === chip;
-      });
-      renderPublications(items, selectedTheme);
-    });
-    return chip;
+  const buttons = themes.map((theme) => {
+    const button = document.createElement('md-outlined-segmented-button');
+    button.setAttribute('label', theme);
+    button.toggleAttribute('selected', theme === selectedTheme);
+    return button;
   });
 
-  chipRow.replaceChildren(...chips);
-  filters.replaceChildren(label, chipRow);
+  themeControl.addEventListener('segmented-button-set-selection', (event) => {
+    selectedTheme = themes[event.detail.index];
+    renderPublications(items, selectedTheme);
+  });
+
+  themeControl.replaceChildren(...buttons);
+  filters.replaceChildren(themeControl);
   renderPublications(items, selectedTheme);
 }
 
@@ -287,6 +279,79 @@ function setupGallery() {
   const viewerTitle = document.querySelector('#viewer-title');
   const viewerImage = document.querySelector('#viewer-image');
   const closeButton = document.querySelector('#viewer-close-button');
+
+  viewer.quick = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  viewer.getOpenAnimation = () => ({
+    dialog: [
+      [
+        [
+          { opacity: 0, transform: 'translateY(24px) scale(0.92)' },
+          { opacity: 1, transform: 'translateY(0) scale(1)' },
+        ],
+        { duration: 420, easing: 'cubic-bezier(.05,.7,.1,1)' },
+      ],
+    ],
+    scrim: [
+      [
+        [{ opacity: 0 }, { opacity: 0.32 }],
+        { duration: 300, easing: 'linear' },
+      ],
+    ],
+    headline: [
+      [
+        [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }],
+        { duration: 300, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+    content: [
+      [
+        [{ opacity: 0 }, { opacity: 0, offset: 0.22 }, { opacity: 1 }],
+        { duration: 320, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+    actions: [
+      [
+        [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
+        { duration: 300, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+  });
+
+  viewer.getCloseAnimation = () => ({
+    dialog: [
+      [
+        [
+          { opacity: 1, transform: 'translateY(0) scale(1)' },
+          { opacity: 0, transform: 'translateY(12px) scale(0.96)' },
+        ],
+        { duration: 180, easing: 'cubic-bezier(.3,0,.8,.15)' },
+      ],
+    ],
+    scrim: [
+      [
+        [{ opacity: 0.32 }, { opacity: 0 }],
+        { duration: 180, easing: 'linear' },
+      ],
+    ],
+    headline: [
+      [
+        [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 120, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+    content: [
+      [
+        [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 120, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+    actions: [
+      [
+        [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 120, easing: 'linear', fill: 'forwards' },
+      ],
+    ],
+  });
 
   const closeViewer = () => {
     viewer.open = false;

@@ -99,7 +99,6 @@
           <md-divider></md-divider>
           <div class="section-body">
             <div id="publication-filters" class="filter-panel" aria-label="Publication themes"></div>
-            <p id="publication-summary" class="section-summary"></p>
             <div id="publication-list" class="tile-stack" aria-live="polite">
               <md-circular-progress indeterminate></md-circular-progress>
             </div>
@@ -113,8 +112,15 @@
           </div>
           <md-divider></md-divider>
           <div class="section-body">
-            <p class="section-summary">Selected repositories</p>
             <div class="tile-stack">
+              <a class="content-tile contrib-tile" href="https://github.com/JinZr/sleep2vec" target="_blank" rel="noopener">
+                <span class="tile-title">JinZr/sleep2vec</span>
+                <span class="tile-support">Unified cross-modal alignment for heterogeneous nocturnal biosignals.</span>
+                <span class="metadata-row">
+                  <span class="metadata-chip"><md-icon>&#xef66;</md-icon>GitHub Repository</span>
+                  <span class="metadata-chip"><md-icon>&#xe45c;</md-icon>Open Project</span>
+                </span>
+              </a>
               <a class="content-tile contrib-tile" href="https://github.com/k2-fsa/icefall" target="_blank" rel="noopener">
                 <span class="tile-title">k2-fsa/icefall</span>
                 <span class="tile-support">icefall contains ASR recipes for various datasets using https://github.com/k2-fsa/k2.</span>
@@ -142,7 +148,6 @@
           </div>
           <md-divider></md-divider>
           <div class="section-body">
-            <p class="section-summary">Service roles</p>
             <div id="service-list" class="tile-stack" aria-live="polite">
               <md-circular-progress indeterminate></md-circular-progress>
             </div>
@@ -157,7 +162,6 @@
           <md-divider></md-divider>
           <div class="section-body">
             <div class="gallery-panel">
-              <p class="section-summary">Selected instant-film photos</p>
               <div class="gallery-grid" id="gallery-wrapper" aria-label="Polaroid gallery">
               </div>
             </div>
@@ -177,7 +181,7 @@
       <md-icon slot="icon">&#xf2ac;</md-icon>
       <div slot="headline" id="viewer-title">Photo</div>
       <div slot="content" class="viewer-canvas">
-        <img id="viewer-image" alt="" />
+        <img id="viewer-image" alt="" draggable="false" />
       </div>
       <div slot="actions">
         <md-text-button id="viewer-close-button" value="close">Close</md-text-button>

@@ -190,7 +190,8 @@ md-filled-button,
 md-text-button,
 md-icon-button,
 md-menu-item,
-md-filter-chip {
+md-outlined-segmented-button,
+md-outlined-segmented-button-set {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -513,33 +514,20 @@ md-divider {
 }
 
 .filter-panel {
-  padding: var(--section-inset-top) var(--section-inset-horizontal) var(--section-inset-bottom);
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
-  border-radius: var(--container-radius);
-  background: var(--md-sys-color-surface-container-low);
-}
-
-.filter-label {
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: var(--type-label-large-size);
-  font-weight: var(--type-label-large-weight);
-  line-height: var(--type-label-large-line-height);
-}
-
-.chip-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--list-item-gap);
-  margin-top: var(--list-item-gap);
+  justify-content: center;
 }
 
-md-filter-chip {
-  --md-filter-chip-container-height: 32px;
-  --md-filter-chip-label-text-font: var(--flutter-font-family);
-  --md-filter-chip-label-text-size: var(--type-label-large-size);
-  --md-filter-chip-label-text-weight: var(--type-label-large-weight);
-  --md-filter-chip-label-text-line-height: var(--type-label-large-line-height);
-  --md-filter-chip-label-text-tracking: 0;
+.theme-segmented-button-set {
+  width: min(100%, 420px);
+}
+
+md-outlined-segmented-button {
+  --md-outlined-segmented-button-container-height: 36px;
+  --md-outlined-segmented-button-label-text-font: var(--flutter-font-family);
+  --md-outlined-segmented-button-label-text-size: var(--type-label-large-size);
+  --md-outlined-segmented-button-label-text-weight: var(--type-label-large-weight);
+  --md-outlined-segmented-button-label-text-line-height: var(--type-label-large-line-height);
   font-family: var(--flutter-font-family);
   font-size: var(--type-label-large-size);
   font-weight: var(--type-label-large-weight);
@@ -678,6 +666,13 @@ md-filter-chip {
   max-height: calc(100vh - 48px);
 }
 
+.gallery-viewer *,
+.viewer-canvas,
+#viewer-image {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .viewer-canvas {
   display: flex;
   align-items: center;
@@ -692,6 +687,7 @@ md-filter-chip {
   max-height: min(68vh, 720px);
   border-radius: var(--media-radius);
   object-fit: contain;
+  -webkit-user-drag: none;
 }
 
 .toast {
