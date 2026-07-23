@@ -58,12 +58,30 @@ function setupTopAppBarElevation() {
   const topAppBar = document.querySelector('.top-app-bar');
   if (!topAppBar) return;
 
+  let updatePending = false;
+
   const updateScrolledUnder = () => {
-    topAppBar.classList.toggle('scrolled-under', window.scrollY > 0);
+    const styles = getComputedStyle(topAppBar);
+    const expandedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-expanded-height'));
+    const collapsedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-collapsed-height'));
+    const collapseRange = expandedHeight - collapsedHeight;
+    const collapse = Math.min(window.scrollY, collapseRange);
+
+    topAppBar.style.setProperty('--app-bar-collapse', `${collapse}px`);
+    topAppBar.style.setProperty('--app-bar-progress', (collapse / collapseRange).toFixed(4));
+    topAppBar.classList.toggle('scrolled-under', window.scrollY > collapseRange);
+    updatePending = false;
+  };
+
+  const requestUpdate = () => {
+    if (updatePending) return;
+    updatePending = true;
+    requestAnimationFrame(updateScrolledUnder);
   };
 
   updateScrolledUnder();
-  window.addEventListener('scroll', updateScrolledUnder, { passive: true });
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
 }
 
 function setupZoomLock() {

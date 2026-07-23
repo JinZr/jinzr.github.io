@@ -26,38 +26,44 @@
     <link rel="apple-touch-icon" href="./icons/Icon-512.webp" />
     <link rel="manifest" href="./manifest.json" />
     <title>Zengrui Jin</title>
-    <script type="module" crossorigin src="./site-assets/index-DRgECVVN.js"></script>
-    <link rel="stylesheet" crossorigin href="./site-assets/index-C4P_0Ga_.css">
+    <script type="module" crossorigin src="./site-assets/index-CaFYok3w.js"></script>
+    <link rel="stylesheet" crossorigin href="./site-assets/index-DkoxF5uk.css">
   </head>
   <body>
     <div id="app">
       <header class="top-app-bar">
-        <div class="app-title">Zengrui Jin</div>
-        <nav class="top-actions" aria-label="Profile links">
-          <md-filled-button data-link="https://scholar.google.com/citations?user=kgH1mk0AAAAJ&hl=en">
-            Google Scholar
-          </md-filled-button>
-          <md-text-button class="wide-action" data-link="https://github.com/JinZr">
-            GitHub
-          </md-text-button>
-          <md-text-button class="wide-action" data-link="https://www.researchgate.net/profile/Zengrui-Jin">
-            ResearchGate
-          </md-text-button>
-          <md-icon-button id="more-menu-button" aria-label="More links">
-            <md-icon>&#xe404;</md-icon>
-          </md-icon-button>
-          <md-menu id="more-menu" anchor="more-menu-button">
-            <md-menu-item data-link="https://github.com/JinZr">
-              <md-icon slot="start">&#xe176;</md-icon>
-              <div slot="headline">GitHub</div>
-            </md-menu-item>
-            <md-menu-item data-link="https://www.researchgate.net/profile/Zengrui-Jin">
-              <md-icon slot="start">&#xe55a;</md-icon>
-              <div slot="headline">ResearchGate</div>
-            </md-menu-item>
-          </md-menu>
-        </nav>
+        <div class="app-bar-toolbar">
+          <div class="app-title">Zengrui Jin</div>
+          <nav class="top-actions" aria-label="Profile links">
+            <md-filled-button data-link="https://scholar.google.com/citations?user=kgH1mk0AAAAJ&hl=en">
+              Google Scholar
+            </md-filled-button>
+            <md-text-button class="wide-action" data-link="https://github.com/JinZr">
+              GitHub
+            </md-text-button>
+            <md-text-button class="wide-action" data-link="https://www.researchgate.net/profile/Zengrui-Jin">
+              ResearchGate
+            </md-text-button>
+            <md-icon-button id="more-menu-button" aria-label="More links">
+              <md-icon>&#xe404;</md-icon>
+            </md-icon-button>
+          </nav>
+        </div>
+        <div class="app-bar-flexible-content">
+          <div class="expanded-app-title">Zengrui Jin</div>
+        </div>
       </header>
+      <md-menu id="more-menu" anchor="more-menu-button" positioning="fixed">
+        <md-menu-item data-link="https://github.com/JinZr">
+          <md-icon slot="start">&#xe176;</md-icon>
+          <div slot="headline">GitHub</div>
+        </md-menu-item>
+        <md-menu-item data-link="https://www.researchgate.net/profile/Zengrui-Jin">
+          <md-icon slot="start">&#xe55a;</md-icon>
+          <div slot="headline">ResearchGate</div>
+        </md-menu-item>
+      </md-menu>
+      <div class="app-bar-spacer" aria-hidden="true"></div>
 
       <main id="top" class="page-shell">
         <section class="surface-card reveal" aria-labelledby="bio-title">

@@ -79,6 +79,9 @@
   --md-sys-color-inverse-surface: #2f3036;
   --md-sys-color-inverse-on-surface: #f1f0f7;
   --md-sys-color-inverse-primary: #aec6ff;
+  --app-bar-collapsed-height: 56px;
+  --app-bar-expanded-height: 280px;
+  --app-bar-max-blur: 24px;
   --page-max-width: 1200px;
   --card-margin: 4px;
   --card-radius: 12px;
@@ -218,26 +221,65 @@ md-icon,
 }
 
 .top-app-bar {
-  position: sticky;
+  --app-bar-collapse: 0px;
+  --app-bar-progress: 0;
+  position: fixed;
   top: 0;
+  right: 0;
+  left: 0;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  min-height: 56px;
-  padding: 0 4px 0 16px;
+  overflow: hidden;
+  height: calc(var(--app-bar-expanded-height) - var(--app-bar-collapse));
+  min-height: var(--app-bar-collapsed-height);
   background: var(--md-sys-color-surface);
   box-shadow: none;
-  color: var(--md-sys-color-on-surface);
-  transition:
-    background-color 180ms var(--motion-standard),
-    box-shadow 180ms var(--motion-standard);
+  color: #ffffff;
+  isolation: isolate;
+  transition: box-shadow 180ms var(--motion-standard);
+  will-change: height;
+}
+
+.top-app-bar::before,
+.top-app-bar::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.top-app-bar::before {
+  z-index: -2;
+  height: var(--app-bar-expanded-height);
+  background: url('/assets/images/app-bar-background.webp') center 52% / cover no-repeat;
+  filter: blur(calc(var(--app-bar-progress) * var(--app-bar-max-blur)));
+  transform: translateY(calc(var(--app-bar-collapse) * -0.18)) scale(1.1);
+  will-change: filter, transform;
+}
+
+.top-app-bar::after {
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgb(5 9 24 / 68%) 0%,
+    rgb(5 9 24 / 18%) 48%,
+    rgb(5 9 24 / 74%) 100%
+  );
 }
 
 .top-app-bar.scrolled-under {
-  background: var(--md-sys-color-surface-container);
   box-shadow:
     0 2px 4px color-mix(in srgb, var(--md-sys-color-shadow) 22%, transparent),
     0 4px 12px 3px color-mix(in srgb, var(--md-sys-color-shadow) 14%, transparent);
+}
+
+.app-bar-spacer {
+  height: var(--app-bar-expanded-height);
+}
+
+.app-bar-toolbar {
+  display: flex;
+  align-items: center;
+  height: var(--app-bar-collapsed-height);
+  padding: 0 4px 0 16px;
 }
 
 .app-title {
@@ -250,13 +292,53 @@ md-icon,
   font-weight: var(--type-title-large-weight);
   line-height: var(--type-title-large-line-height);
   text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 45%);
   white-space: nowrap;
+  opacity: clamp(0, calc((var(--app-bar-progress) - 0.55) * 2.25), 1);
+  transform: translateY(calc((1 - var(--app-bar-progress)) * -8px));
+  will-change: opacity, transform;
+}
+
+.app-bar-flexible-content {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: min(100%, var(--page-max-width));
+  margin: 0 auto;
+  padding: 0 20px 24px;
+  pointer-events: none;
+  opacity: clamp(0, calc(1 - (var(--app-bar-progress) * 1.65)), 1);
+  transform: translateY(calc(var(--app-bar-progress) * 12px));
+  will-change: opacity, transform;
+}
+
+.expanded-app-title {
+  font-family: var(--md-ref-typeface-brand);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 48px;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 55%);
 }
 
 .top-actions {
   display: flex;
   align-items: center;
   gap: 0;
+}
+
+.top-app-bar md-text-button {
+  --md-text-button-label-text-color: #ffffff;
+  --md-text-button-hover-label-text-color: #ffffff;
+  --md-text-button-focus-label-text-color: #ffffff;
+  --md-text-button-pressed-label-text-color: #ffffff;
+}
+
+.top-app-bar md-icon-button {
+  --md-icon-button-icon-color: #ffffff;
+  --md-icon-button-hover-icon-color: #ffffff;
+  --md-icon-button-focus-icon-color: #ffffff;
+  --md-icon-button-pressed-icon-color: #ffffff;
 }
 
 md-filled-button {
@@ -304,6 +386,10 @@ md-menu-item {
 
 #more-menu-button {
   display: none;
+}
+
+#more-menu {
+  z-index: 20;
 }
 
 .page-shell {
@@ -745,6 +831,8 @@ md-outlined-segmented-button {
 
 @media (max-width: 700px) {
   :root {
+    --app-bar-expanded-height: 220px;
+    --app-bar-max-blur: 16px;
     --type-card-header-size: 22px;
     --type-card-header-line-height: 28px;
     --container-radius: 14px;
@@ -765,8 +853,13 @@ md-outlined-segmented-button {
     --metadata-icon-size: 12px;
   }
 
-  .top-app-bar {
-    min-height: 56px;
+  .app-bar-flexible-content {
+    padding: 0 16px 20px;
+  }
+
+  .expanded-app-title {
+    font-size: 32px;
+    line-height: 40px;
   }
 
   .tile-title {
@@ -818,6 +911,15 @@ md-outlined-segmented-button {
   .reveal,
   .reveal.is-visible {
     opacity: 1;
+    transform: none;
+  }
+
+  .top-app-bar::before {
+    transform: scale(1.1);
+  }
+
+  .app-title,
+  .app-bar-flexible-content {
     transform: none;
   }
 }
