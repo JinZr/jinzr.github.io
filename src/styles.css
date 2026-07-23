@@ -16,12 +16,14 @@
 
 :root {
   color-scheme: light;
-  --flutter-font-family: Roboto, Arial, sans-serif;
-  --type-title-large-size: 22px;
-  --type-title-large-line-height: 28px;
-  --type-card-header-size: var(--type-title-large-size);
-  --type-card-header-line-height: var(--type-title-large-line-height);
-  --type-card-header-weight: 400;
+  --md-ref-typeface-brand: 'Google Sans Flex', 'Google Sans', Roboto, Arial, sans-serif;
+  --md-ref-typeface-plain: 'Google Sans Text', 'Google Sans Flex', Roboto, Arial, sans-serif;
+  --type-title-large-size: 16px;
+  --type-title-large-line-height: 24px;
+  --type-title-large-weight: 500;
+  --type-card-header-size: 24px;
+  --type-card-header-line-height: 32px;
+  --type-card-header-weight: 475;
   --type-title-medium-size: 16px;
   --type-title-medium-line-height: 24px;
   --type-title-medium-weight: 500;
@@ -41,8 +43,7 @@
   --type-label-medium-size: 12px;
   --type-label-medium-line-height: 16px;
   --type-label-medium-weight: 500;
-  --md-ref-typeface-brand: var(--flutter-font-family);
-  --md-ref-typeface-plain: var(--flutter-font-family);
+  --type-label-medium-tracking: 0.1px;
   --md-sys-color-primary: #455e91;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #d8e2ff;
@@ -99,7 +100,7 @@
   --chip-label-horizontal: 10px;
   --metadata-icon-size: 13px;
   --motion-standard: cubic-bezier(0.2, 0, 0, 1);
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -156,16 +157,17 @@ body {
   touch-action: pan-x pan-y;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
-  font-family: var(--flutter-font-family);
-  font-size: var(--type-body-medium-size);
-  font-weight: var(--type-body-medium-weight);
-  line-height: var(--type-body-medium-line-height);
+  font-family: var(--md-ref-typeface-plain);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
+  line-height: var(--type-body-large-line-height);
   letter-spacing: 0;
   text-rendering: optimizeLegibility;
 }
 
 a {
   color: var(--md-sys-color-primary);
+  font-weight: 500;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
@@ -243,8 +245,9 @@ md-icon,
   flex: 1 1 auto;
   min-width: 0;
   padding-right: 16px;
+  font-family: var(--md-ref-typeface-brand);
   font-size: var(--type-title-large-size);
-  font-weight: var(--type-card-header-weight);
+  font-weight: var(--type-title-large-weight);
   line-height: var(--type-title-large-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -259,12 +262,12 @@ md-icon,
 md-filled-button {
   --md-filled-button-container-height: 40px;
   --md-filled-button-container-shape: 999px;
-  --md-filled-button-label-text-font: var(--flutter-font-family);
+  --md-filled-button-label-text-font: var(--md-ref-typeface-plain);
   --md-filled-button-label-text-size: var(--type-label-large-size);
   --md-filled-button-label-text-line-height: var(--type-label-large-line-height);
   --md-filled-button-label-text-weight: var(--type-label-large-weight);
   --md-filled-button-label-text-tracking: 0;
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-label-large-size);
   font-weight: var(--type-label-large-weight);
   line-height: var(--type-label-large-line-height);
@@ -274,12 +277,12 @@ md-filled-button {
 md-text-button {
   --md-text-button-container-height: 40px;
   --md-text-button-container-shape: 999px;
-  --md-text-button-label-text-font: var(--flutter-font-family);
+  --md-text-button-label-text-font: var(--md-ref-typeface-plain);
   --md-text-button-label-text-size: var(--type-label-large-size);
   --md-text-button-label-text-line-height: var(--type-label-large-line-height);
   --md-text-button-label-text-weight: var(--type-label-large-weight);
   --md-text-button-label-text-tracking: 0;
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-label-large-size);
   font-weight: var(--type-label-large-weight);
   line-height: var(--type-label-large-line-height);
@@ -287,12 +290,12 @@ md-text-button {
 }
 
 md-menu-item {
-  --md-menu-item-label-text-font: var(--flutter-font-family);
+  --md-menu-item-label-text-font: var(--md-ref-typeface-plain);
   --md-menu-item-label-text-size: var(--type-body-large-size);
   --md-menu-item-label-text-line-height: var(--type-body-large-line-height);
   --md-menu-item-label-text-weight: var(--type-body-large-weight);
   --md-menu-item-label-text-tracking: 0;
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-body-large-size);
   font-weight: var(--type-body-large-weight);
   line-height: var(--type-body-large-line-height);
@@ -338,6 +341,7 @@ h1,
 h2 {
   overflow: hidden;
   margin: 0;
+  font-family: var(--md-ref-typeface-brand);
   font-size: var(--type-card-header-size);
   font-weight: var(--type-card-header-weight);
   line-height: var(--type-card-header-line-height);
@@ -392,7 +396,7 @@ md-divider {
   border-radius: var(--container-radius);
   background: var(--md-sys-color-surface-container-low);
   color: var(--md-sys-color-on-surface);
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-body-medium-size);
   font-weight: var(--type-body-medium-weight);
   line-height: var(--type-body-medium-line-height);
@@ -460,6 +464,7 @@ md-divider {
   font-size: var(--type-label-medium-size);
   font-weight: var(--type-label-medium-weight);
   line-height: var(--type-label-medium-line-height);
+  letter-spacing: var(--type-label-medium-tracking);
 }
 
 .metadata-chip md-icon {
@@ -524,11 +529,11 @@ md-divider {
 
 md-outlined-segmented-button {
   --md-outlined-segmented-button-container-height: 36px;
-  --md-outlined-segmented-button-label-text-font: var(--flutter-font-family);
+  --md-outlined-segmented-button-label-text-font: var(--md-ref-typeface-plain);
   --md-outlined-segmented-button-label-text-size: var(--type-label-large-size);
   --md-outlined-segmented-button-label-text-weight: var(--type-label-large-weight);
   --md-outlined-segmented-button-label-text-line-height: var(--type-label-large-line-height);
-  font-family: var(--flutter-font-family);
+  font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-label-large-size);
   font-weight: var(--type-label-large-weight);
   line-height: var(--type-label-large-line-height);
@@ -623,6 +628,7 @@ md-outlined-segmented-button {
   font-size: var(--type-label-medium-size);
   font-weight: var(--type-label-medium-weight);
   line-height: var(--type-label-medium-line-height);
+  letter-spacing: var(--type-label-medium-tracking);
   opacity: 0;
   transform: translateY(4px);
   transition:
@@ -652,11 +658,11 @@ md-outlined-segmented-button {
 .gallery-viewer {
   --md-dialog-container-color: var(--md-sys-color-surface-container-high);
   --md-dialog-container-shape: 28px;
-  --md-dialog-headline-font: var(--flutter-font-family);
+  --md-dialog-headline-font: var(--md-ref-typeface-brand);
   --md-dialog-headline-size: var(--type-card-header-size);
   --md-dialog-headline-line-height: var(--type-card-header-line-height);
   --md-dialog-headline-weight: var(--type-card-header-weight);
-  --md-dialog-supporting-text-font: var(--flutter-font-family);
+  --md-dialog-supporting-text-font: var(--md-ref-typeface-plain);
   --md-dialog-supporting-text-size: var(--type-body-medium-size);
   --md-dialog-supporting-text-line-height: var(--type-body-medium-line-height);
   --md-dialog-supporting-text-weight: var(--type-body-medium-weight);
@@ -739,6 +745,8 @@ md-outlined-segmented-button {
 
 @media (max-width: 700px) {
   :root {
+    --type-card-header-size: 22px;
+    --type-card-header-line-height: 28px;
     --container-radius: 14px;
     --card-padding-horizontal: 12px;
     --card-padding-top: 8px;
