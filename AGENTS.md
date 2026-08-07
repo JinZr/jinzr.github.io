@@ -22,3 +22,7 @@
 ## Validation
 - Run `npm run build` after source or asset changes.
 - For UI changes, verify desktop and mobile browser screenshots before committing.
+
+## Content footer contract
+- If this task modifies site-visible text or pages, keep footer wording in `src/index.html` as `Last edited on`.
+- The date should be generated during build and injected into `src/main.js` via Vite `define`, so it remains the publish/build time and does not change on each visit.
