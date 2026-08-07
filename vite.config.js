@@ -1,5 +1,11 @@
 import { defineConfig } from 'vite';
 
+const lastEdited = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+
 export default defineConfig({
   root: 'src',
   publicDir: '../public',
@@ -11,5 +17,8 @@ export default defineConfig({
     modulePreload: {
       polyfill: false,
     },
+  },
+  define: {
+    __LAST_EDITED__: JSON.stringify(lastEdited),
   },
 });

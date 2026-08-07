@@ -449,3 +449,8 @@ setupEmailCopy();
 setupContent();
 setupGallery();
 setupReveal();
+
+const footer = document.querySelector('.site-footer');
+if (footer) {
+  footer.textContent = `Last edited on ${__LAST_EDITED__}.`;
+}
