@@ -21,8 +21,8 @@
     <link rel="apple-touch-icon" href="./icons/Icon-512.webp" />
     <link rel="manifest" href="./manifest.json" />
     <title>Zengrui Jin</title>
-    <script type="module" crossorigin src="./site-assets/index-C-8rDSSJ.js"></script>
-    <link rel="stylesheet" crossorigin href="./site-assets/index-B91TJQJj.css">
+    <script type="module" crossorigin src="./site-assets/index-BNNfaGQQ.js"></script>
+    <link rel="stylesheet" crossorigin href="./site-assets/index-CdnWlutF.css">
   </head>
   <body>
     <div id="app">
@@ -171,14 +171,24 @@
       </main>
     </div>
 
-    <md-dialog id="gallery-viewer" class="gallery-viewer">
-      <md-icon slot="icon">&#xf1db;</md-icon>
-      <div slot="headline" id="viewer-title">Photo</div>
-      <div slot="content" class="viewer-canvas">
-        <img id="viewer-image" alt="" draggable="false" />
-      </div>
-      <div slot="actions">
-        <md-text-button id="viewer-close-button" value="close">Close</md-text-button>
+    <md-dialog id="gallery-viewer" class="gallery-viewer" aria-labelledby="viewer-title">
+      <div slot="content" class="viewer-content">
+        <div class="viewer-header">
+          <h2 id="viewer-title">Photo</h2>
+          <md-text-button id="viewer-close-button">Close</md-text-button>
+        </div>
+        <div id="viewer-canvas" class="viewer-canvas">
+          <img id="viewer-image" alt="" draggable="false" />
+          <div class="viewer-zoom-controls" role="group" aria-label="Photo zoom controls">
+            <md-icon-button id="viewer-zoom-out" aria-label="Zoom out">
+              <span class="viewer-zoom-symbol" aria-hidden="true">−</span>
+            </md-icon-button>
+            <md-text-button id="viewer-zoom-reset" aria-label="Reset zoom">100%</md-text-button>
+            <md-icon-button id="viewer-zoom-in" aria-label="Zoom in">
+              <span class="viewer-zoom-symbol" aria-hidden="true">+</span>
+            </md-icon-button>
+          </div>
+        </div>
       </div>
     </md-dialog>
 

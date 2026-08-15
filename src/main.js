@@ -252,6 +252,23 @@ function renderPublicationFilters(items) {
   themeControl.addEventListener('segmented-button-set-selection', (event) => {
     selectedTheme = themes[event.detail.index];
     renderPublications(items, selectedTheme);
+
+    buttons[event.detail.index]?.animate([
+      { transform: 'scale(0.94)' },
+      { transform: 'scale(1.035)', offset: 0.58 },
+      { transform: 'scale(1)' },
+    ], {
+      duration: 450,
+      easing: 'cubic-bezier(.42,1.67,.21,.9)',
+    });
+
+    document.querySelector('#publication-list')?.animate([
+      { opacity: 0.72, transform: 'translateY(6px) scale(0.995)' },
+      { opacity: 1, transform: 'translateY(0) scale(1)' },
+    ], {
+      duration: 360,
+      easing: 'cubic-bezier(.05,.7,.1,1)',
+    });
   });
 
   themeControl.replaceChildren(...buttons);
@@ -313,10 +330,104 @@ function setupGallery() {
   const wrapper = document.querySelector('#gallery-wrapper');
   const viewer = document.querySelector('#gallery-viewer');
   const viewerTitle = document.querySelector('#viewer-title');
+  const viewerCanvas = document.querySelector('#viewer-canvas');
   const viewerImage = document.querySelector('#viewer-image');
   const closeButton = document.querySelector('#viewer-close-button');
+  const zoomOutButton = document.querySelector('#viewer-zoom-out');
+  const zoomResetButton = document.querySelector('#viewer-zoom-reset');
+  const zoomInButton = document.querySelector('#viewer-zoom-in');
 
-  viewer.quick = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let viewerZoom = 1;
+  let viewerPanX = 0;
+  let viewerPanY = 0;
+  let activePointerId;
+  let previousPointerX = 0;
+  let previousPointerY = 0;
+
+  const isZoomControl = (event) => event.composedPath().some(
+    (element) => element.classList?.contains('viewer-zoom-controls'),
+  );
+
+  const constrainViewerPan = () => {
+    const availableWidth = Math.max(0, viewerCanvas.clientWidth - 16);
+    const availableHeight = Math.max(0, viewerCanvas.clientHeight - 16);
+    const maxPanX = Math.max(0, ((viewerImage.offsetWidth * viewerZoom) - availableWidth) / 2);
+    const maxPanY = Math.max(0, ((viewerImage.offsetHeight * viewerZoom) - availableHeight) / 2);
+    viewerPanX = Math.min(maxPanX, Math.max(-maxPanX, viewerPanX));
+    viewerPanY = Math.min(maxPanY, Math.max(-maxPanY, viewerPanY));
+  };
+
+  const updateViewerZoom = () => {
+    constrainViewerPan();
+    viewerImage.style.transform = `translate3d(${viewerPanX}px, ${viewerPanY}px, 0) scale(${viewerZoom})`;
+    zoomResetButton.textContent = `${Math.round(viewerZoom * 100)}%`;
+    zoomOutButton.disabled = viewerZoom <= 1;
+    zoomInButton.disabled = viewerZoom >= 4;
+    viewer.classList.toggle('is-zoomed', viewerZoom > 1);
+  };
+
+  const setViewerZoom = (zoom) => {
+    viewerZoom = Math.round(Math.min(4, Math.max(1, zoom)) * 100) / 100;
+    if (viewerZoom === 1) {
+      viewerPanX = 0;
+      viewerPanY = 0;
+    }
+    updateViewerZoom();
+  };
+
+  const resetViewerZoom = () => {
+    viewerZoom = 1;
+    viewerPanX = 0;
+    viewerPanY = 0;
+    viewer.classList.remove('is-panning');
+    updateViewerZoom();
+  };
+
+  zoomOutButton?.addEventListener('click', () => setViewerZoom(viewerZoom - 0.5));
+  zoomResetButton?.addEventListener('click', resetViewerZoom);
+  zoomInButton?.addEventListener('click', () => setViewerZoom(viewerZoom + 0.5));
+  viewerImage?.addEventListener('load', resetViewerZoom);
+  window.addEventListener('resize', updateViewerZoom);
+
+  viewerCanvas?.addEventListener('wheel', (event) => {
+    if (isZoomControl(event)) return;
+    event.preventDefault();
+    const sensitivity = event.deltaMode === WheelEvent.DOM_DELTA_PIXEL ? 0.002 : 0.04;
+    setViewerZoom(viewerZoom - (event.deltaY * sensitivity));
+  }, { passive: false });
+
+  viewerCanvas?.addEventListener('dblclick', (event) => {
+    if (isZoomControl(event)) return;
+    setViewerZoom(viewerZoom > 1 ? 1 : 2);
+  });
+
+  viewerCanvas?.addEventListener('pointerdown', (event) => {
+    if (viewerZoom <= 1 || isZoomControl(event)) return;
+    activePointerId = event.pointerId;
+    previousPointerX = event.clientX;
+    previousPointerY = event.clientY;
+    viewer.classList.add('is-panning');
+    viewerCanvas.setPointerCapture(event.pointerId);
+  });
+
+  viewerCanvas?.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== activePointerId) return;
+    viewerPanX += event.clientX - previousPointerX;
+    viewerPanY += event.clientY - previousPointerY;
+    previousPointerX = event.clientX;
+    previousPointerY = event.clientY;
+    updateViewerZoom();
+  });
+
+  const stopViewerPan = (event) => {
+    if (event.pointerId !== activePointerId) return;
+    activePointerId = undefined;
+    viewer.classList.remove('is-panning');
+  };
+
+  viewerCanvas?.addEventListener('pointerup', stopViewerPan);
+  viewerCanvas?.addEventListener('pointercancel', stopViewerPan);
+
   viewer.getOpenAnimation = () => ({
     dialog: [
       [
@@ -333,22 +444,10 @@ function setupGallery() {
         { duration: 300, easing: 'linear' },
       ],
     ],
-    headline: [
-      [
-        [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }],
-        { duration: 300, easing: 'linear', fill: 'forwards' },
-      ],
-    ],
     content: [
       [
         [{ opacity: 0 }, { opacity: 0, offset: 0.22 }, { opacity: 1 }],
         { duration: 320, easing: 'linear', fill: 'forwards' },
-      ],
-    ],
-    actions: [
-      [
-        [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
-        { duration: 300, easing: 'linear', fill: 'forwards' },
       ],
     ],
   });
@@ -369,19 +468,7 @@ function setupGallery() {
         { duration: 180, easing: 'linear' },
       ],
     ],
-    headline: [
-      [
-        [{ opacity: 1 }, { opacity: 0 }],
-        { duration: 120, easing: 'linear', fill: 'forwards' },
-      ],
-    ],
     content: [
-      [
-        [{ opacity: 1 }, { opacity: 0 }],
-        { duration: 120, easing: 'linear', fill: 'forwards' },
-      ],
-    ],
-    actions: [
       [
         [{ opacity: 1 }, { opacity: 0 }],
         { duration: 120, easing: 'linear', fill: 'forwards' },
@@ -390,6 +477,7 @@ function setupGallery() {
   });
 
   const closeViewer = () => {
+    resetViewerZoom();
     viewer.open = false;
     viewer.removeAttribute('open');
     viewerImage.removeAttribute('src');
@@ -397,6 +485,7 @@ function setupGallery() {
 
   closeButton?.addEventListener('click', closeViewer);
   viewer?.addEventListener('closed', () => {
+    resetViewerZoom();
     viewerImage.removeAttribute('src');
   });
 
@@ -407,6 +496,7 @@ function setupGallery() {
     button.type = 'button';
     button.setAttribute('aria-label', `Open full image for ${item.title}`);
     button.addEventListener('click', () => {
+      resetViewerZoom();
       viewerTitle.textContent = item.title;
       viewerImage.src = publicUrl(item.full);
       viewerImage.alt = `Polaroid photo from ${item.title}`;
@@ -434,9 +524,8 @@ function setupGallery() {
 }
 
 function setupReveal() {
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const targets = [...document.querySelectorAll('.reveal')];
-  if (reducedMotion || !('IntersectionObserver' in window)) {
+  if (!('IntersectionObserver' in window)) {
     targets.forEach((target) => target.classList.add('is-visible'));
     return;
   }
