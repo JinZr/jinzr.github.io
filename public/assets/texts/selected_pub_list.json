@@ -5,6 +5,7 @@
         "link": "https://www.nature.com/articles/s42256-026-01281-1",
         "author": "Siyin Wang, Zengrui Jin, Changli Tang, Qiujia Li, Bo Li, Chen Chen, Yuchen Hu, Wenyi Yu, Yixuan Li, Jimin Zhuang, Yudong Yang, Mingqiu Wang, Michael Han, Yifan Ding, Junwen Bai, Tom Ouyang, Shuo-yiin Chang, Xianzhao Chen, Xiaohai Tian, Jun Zhang, Lu Lu, Guangzhi Sun, Zhehuai Chen, Ji Wu, Bowen Zhou, Yuxuan Wang, Tara Sainath, Yonghui Wu, Chao Zhang",
         "year": "2026",
+        "co_first_author": true,
         "theme": "Speech"
     },
     {
@@ -45,6 +46,7 @@
         "link": "https://openreview.net/forum?id=DDXhRN66eV",
         "author": "Weixuan Yuan, Zengrui Jin, Yichen Wang, Donglin Xie, Ziyi Ye, Chao Zhang, Xuesong Chen",
         "year": "2026",
+        "co_first_author": true,
         "theme": "Digital Health"
     },
     {

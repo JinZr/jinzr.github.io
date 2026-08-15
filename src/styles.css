@@ -542,6 +542,11 @@ md-divider {
   -webkit-line-clamp: 3;
 }
 
+.publication-author-self {
+  color: var(--md-sys-color-primary);
+  font-weight: 650;
+}
+
 .contrib-tile .tile-support {
   display: block;
   overflow: visible;

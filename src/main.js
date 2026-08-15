@@ -29,6 +29,7 @@ const galleryItems = [
 const iconCodepoints = {
   auto_stories: 0xeeaf,
   calendar_today: 0xef11,
+  group: 0xe7ef,
   place: 0xf2ac,
 };
 
@@ -195,14 +196,28 @@ function buildPublicationCard(item) {
 
   tile.append(createTextSpan('tile-title', item.title || 'Untitled publication'));
   if (item.author) {
-    tile.append(createTextSpan('tile-support', item.author));
+    const authors = document.createElement('span');
+    authors.className = 'tile-support';
+    item.author.split(', ').forEach((name, index) => {
+      if (index > 0) authors.append(document.createTextNode(', '));
+      if (name === 'Zengrui Jin') {
+        const self = document.createElement('strong');
+        self.className = 'publication-author-self';
+        self.textContent = name;
+        authors.append(self);
+      } else {
+        authors.append(document.createTextNode(name));
+      }
+    });
+    tile.append(authors);
   }
 
-  if (item.venue || item.year) {
+  if (item.venue || item.year || item.co_first_author) {
     const metadata = document.createElement('span');
     metadata.className = 'metadata-row';
     if (item.venue) metadata.append(createMetadataChip('auto_stories', item.venue));
     if (item.year) metadata.append(createMetadataChip('calendar_today', item.year));
+    if (item.co_first_author) metadata.append(createMetadataChip('group', 'Co-first author'));
     tile.append(metadata);
   }
 
