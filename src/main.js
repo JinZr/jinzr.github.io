@@ -211,7 +211,9 @@ function buildPublicationCard(item) {
 
 function renderPublications(items, selectedTheme) {
   const list = document.querySelector('#publication-list');
-  const filtered = items.filter((item) => publicationTheme(item) === selectedTheme);
+  const filtered = items
+    .filter((item) => publicationTheme(item) === selectedTheme)
+    .sort((a, b) => Number(b.year) - Number(a.year));
 
   list.replaceChildren(...filtered.map(buildPublicationCard));
 }

@@ -1,9 +1,9 @@
 [
     {
-        "venue": "Proc. ICML",
-        "title": "SPEAR: A Unified SSL Framework for Learning Speech and Audio Representations",
-        "link": "https://openreview.net/forum?id=vHaaDCLF0M",
-        "author": "Xiaoyu Yang, Yifan Yang, Zengrui Jin, Ziyun Cui, Wen Wu, Baoxiang Li, Chao Zhang, Phil Woodland",
+        "venue": "Nature Machine Intelligence",
+        "title": "Towards general auditory intelligence for machine listening and speaking",
+        "link": "https://www.nature.com/articles/s42256-026-01281-1",
+        "author": "Siyin Wang, Zengrui Jin, Changli Tang, Qiujia Li, Bo Li, Chen Chen, Yuchen Hu, Wenyi Yu, Yixuan Li, Jimin Zhuang, Yudong Yang, Mingqiu Wang, Michael Han, Yifan Ding, Junwen Bai, Tom Ouyang, Shuo-yiin Chang, Xianzhao Chen, Xiaohai Tian, Jun Zhang, Lu Lu, Guangzhi Sun, Zhehuai Chen, Ji Wu, Bowen Zhou, Yuxuan Wang, Tara Sainath, Yonghui Wu, Chao Zhang",
         "year": "2026",
         "theme": "Speech"
     },
@@ -24,10 +24,10 @@
         "theme": "Speech"
     },
     {
-        "venue": "Nature Machine Intelligence",
-        "title": "Towards general auditory intelligence for machine listening and speaking",
-        "link": "https://www.nature.com/articles/s42256-026-01281-1",
-        "author": "Siyin Wang, Zengrui Jin, Changli Tang, Qiujia Li, Bo Li, Chen Chen, Yuchen Hu, Wenyi Yu, Yixuan Li, Jimin Zhuang, Yudong Yang, Mingqiu Wang, Michael Han, Yifan Ding, Junwen Bai, Tom Ouyang, Shuo-yiin Chang, Xianzhao Chen, Xiaohai Tian, Jun Zhang, Lu Lu, Guangzhi Sun, Zhehuai Chen, Ji Wu, Bowen Zhou, Yuxuan Wang, Tara Sainath, Yonghui Wu, Chao Zhang",
+        "venue": "Proc. ICML",
+        "title": "SPEAR: A Unified SSL Framework for Learning Speech and Audio Representations",
+        "link": "https://openreview.net/forum?id=vHaaDCLF0M",
+        "author": "Xiaoyu Yang, Yifan Yang, Zengrui Jin, Ziyun Cui, Wen Wu, Baoxiang Li, Chao Zhang, Phil Woodland",
         "year": "2026",
         "theme": "Speech"
     },
