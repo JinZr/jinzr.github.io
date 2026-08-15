@@ -16,14 +16,14 @@ const publicUrl = (path) => new URL(`${baseUrl}${path}`, window.location.href).t
 const googleAnalyticsId = 'G-4SJNNRFW4C';
 
 const galleryItems = [
-  { image: 'assets/images/egs/egs1.webp', full: 'assets/images/egs_highres/egs1.webp', title: 'Dalian' },
-  { image: 'assets/images/egs/egs2.webp', full: 'assets/images/egs_highres/egs2.webp', title: 'Dalian' },
-  { image: 'assets/images/egs/egs3.webp', full: 'assets/images/egs_highres/egs3.webp', title: 'Dalian' },
-  { image: 'assets/images/egs/egs4.webp', full: 'assets/images/egs_highres/egs4.webp', title: 'Dalian' },
-  { image: 'assets/images/egs/egs5.webp', full: 'assets/images/egs_highres/egs5.webp', title: 'Hong Kong SAR' },
-  { image: 'assets/images/egs/egs6.webp', full: 'assets/images/egs_highres/egs6.webp', title: 'Hong Kong SAR' },
-  { image: 'assets/images/egs/egs7.webp', full: 'assets/images/egs_highres/egs7.webp', title: 'Hong Kong SAR' },
-  { image: 'assets/images/egs/egs8.webp', full: 'assets/images/egs_highres/egs8.webp', title: 'Hong Kong SAR' },
+  { image: 'assets/images/egs/egs1.webp', full: 'assets/images/egs_highres/egs1.webp', title: 'Dalian', width: 805, height: 978 },
+  { image: 'assets/images/egs/egs2.webp', full: 'assets/images/egs_highres/egs2.webp', title: 'Dalian', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs3.webp', full: 'assets/images/egs_highres/egs3.webp', title: 'Dalian', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs4.webp', full: 'assets/images/egs_highres/egs4.webp', title: 'Dalian', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs5.webp', full: 'assets/images/egs_highres/egs5.webp', title: 'Hong Kong SAR', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs6.webp', full: 'assets/images/egs_highres/egs6.webp', title: 'Hong Kong SAR', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs7.webp', full: 'assets/images/egs_highres/egs7.webp', title: 'Hong Kong SAR', width: 480, height: 584 },
+  { image: 'assets/images/egs/egs8.webp', full: 'assets/images/egs_highres/egs8.webp', title: 'Hong Kong SAR', width: 480, height: 584 },
 ];
 
 const iconCodepoints = {
@@ -106,10 +106,14 @@ function setupZoomLock() {
 
 function setupAnalytics() {
   let scheduled = false;
+  let timeoutId;
+  const interactionEvents = ['pointerdown', 'keydown'];
 
   const loadAnalytics = () => {
     if (window.__gaLoaded) return;
     window.__gaLoaded = true;
+    interactionEvents.forEach((eventName) => window.removeEventListener(eventName, loadAnalytics));
+    window.clearTimeout(timeoutId);
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag() {
       window.dataLayer.push(arguments);
@@ -126,11 +130,8 @@ function setupAnalytics() {
   const schedule = () => {
     if (scheduled) return;
     scheduled = true;
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(loadAnalytics, { timeout: 2000 });
-    } else {
-      setTimeout(loadAnalytics, 1500);
-    }
+    interactionEvents.forEach((eventName) => window.addEventListener(eventName, loadAnalytics, { once: true, passive: true }));
+    timeoutId = window.setTimeout(loadAnalytics, 5000);
   };
 
   if (document.readyState === 'complete') {
@@ -418,6 +419,8 @@ function setupGallery() {
     image.alt = `Polaroid photo from ${item.title}`;
     image.loading = 'lazy';
     image.decoding = 'async';
+    image.width = item.width;
+    image.height = item.height;
 
     const label = document.createElement('span');
     label.className = 'gallery-tile-label';

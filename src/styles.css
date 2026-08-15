@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'Google Sans Flex';
-  font-display: swap;
+  font-display: optional;
   font-style: normal;
   font-weight: 1 1000;
   font-stretch: 100%;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: 'Material Symbols Outlined';
-  font-display: block;
+  font-display: swap;
   font-style: normal;
   font-weight: 100 700;
   src: url('/assets/fonts/MaterialSymbolsOutlined.woff2') format('woff2');
