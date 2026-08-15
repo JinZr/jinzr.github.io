@@ -27,10 +27,10 @@ const galleryItems = [
 ];
 
 const iconCodepoints = {
-  auto_stories: 0xeeaf,
-  calendar_today: 0xef11,
-  group: 0xe7ef,
-  place: 0xf2ac,
+  auto_stories: 0xe666,
+  calendar_today: 0xe935,
+  asterisk: 0xf525,
+  place: 0xf1db,
 };
 
 const openExternal = (url) => {
@@ -217,7 +217,7 @@ function buildPublicationCard(item) {
     metadata.className = 'metadata-row';
     if (item.venue) metadata.append(createMetadataChip('auto_stories', item.venue));
     if (item.year) metadata.append(createMetadataChip('calendar_today', item.year));
-    if (item.co_first_author) metadata.append(createMetadataChip('group', 'Co-first author'));
+    if (item.co_first_author) metadata.append(createMetadataChip('asterisk', 'Co-first author'));
     tile.append(metadata);
   }
 
