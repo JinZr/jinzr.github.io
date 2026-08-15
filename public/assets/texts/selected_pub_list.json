@@ -24,11 +24,11 @@
         "theme": "Speech"
     },
     {
-        "venue": "Proc. Interspeech",
-        "title": "Adversarial Data Augmentation for Disordered Speech Recognition",
-        "link": "https://www.isca-archive.org/interspeech_2021/jin21_interspeech.html",
-        "author": "Zengrui Jin, Mengzhe Geng, Xurong Xie, Jianwei Yu, Shansong Liu, Xunying Liu, Helen Meng",
-        "year": "2021",
+        "venue": "Nature Machine Intelligence",
+        "title": "Towards general auditory intelligence for machine listening and speaking",
+        "link": "https://www.nature.com/articles/s42256-026-01281-1",
+        "author": "Siyin Wang, Zengrui Jin, Changli Tang, Qiujia Li, Bo Li, Chen Chen, Yuchen Hu, Wenyi Yu, Yixuan Li, Jimin Zhuang, Yudong Yang, Mingqiu Wang, Michael Han, Yifan Ding, Junwen Bai, Tom Ouyang, Shuo-yiin Chang, Xianzhao Chen, Xiaohai Tian, Jun Zhang, Lu Lu, Guangzhi Sun, Zhehuai Chen, Ji Wu, Bowen Zhou, Yuxuan Wang, Tara Sainath, Yonghui Wu, Chao Zhang",
+        "year": "2026",
         "theme": "Speech"
     },
     {
