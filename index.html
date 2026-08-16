@@ -21,8 +21,8 @@
     <link rel="apple-touch-icon" href="./icons/Icon-512.webp" />
     <link rel="manifest" href="./manifest.json" />
     <title>Zengrui Jin</title>
-    <script type="module" crossorigin src="./site-assets/index-BNNfaGQQ.js"></script>
-    <link rel="stylesheet" crossorigin href="./site-assets/index-CdnWlutF.css">
+    <script type="module" crossorigin src="./site-assets/index-D4zWTYVt.js"></script>
+    <link rel="stylesheet" crossorigin href="./site-assets/index-DG7NGlvB.css">
   </head>
   <body>
     <div id="app">
@@ -39,7 +39,13 @@
             <md-text-button class="wide-action" data-link="https://www.researchgate.net/profile/Zengrui-Jin">
               ResearchGate
             </md-text-button>
-            <md-icon-button id="more-menu-button" aria-label="More links">
+            <md-icon-button
+              id="more-menu-button"
+              aria-label="More links"
+              aria-haspopup="menu"
+              aria-controls="more-menu"
+              aria-expanded="false"
+            >
               <md-icon>&#xe5d4;</md-icon>
             </md-icon-button>
           </nav>
@@ -48,16 +54,21 @@
           <div class="expanded-app-title">Zengrui Jin</div>
         </div>
       </header>
-      <md-menu id="more-menu" anchor="more-menu-button" positioning="fixed">
-        <md-menu-item data-link="https://github.com/JinZr">
-          <md-icon slot="start">&#xe86f;</md-icon>
-          <div slot="headline">GitHub</div>
-        </md-menu-item>
-        <md-menu-item data-link="https://www.researchgate.net/profile/Zengrui-Jin">
-          <md-icon slot="start">&#xea4b;</md-icon>
-          <div slot="headline">ResearchGate</div>
-        </md-menu-item>
-      </md-menu>
+      <div id="more-menu" class="profile-menu" role="menu" aria-hidden="true">
+        <button class="profile-menu-item" type="button" role="menuitem" data-link="https://github.com/JinZr">
+          <md-icon>&#xe86f;</md-icon>
+          <span>GitHub</span>
+        </button>
+        <button
+          class="profile-menu-item"
+          type="button"
+          role="menuitem"
+          data-link="https://www.researchgate.net/profile/Zengrui-Jin"
+        >
+          <md-icon>&#xea4b;</md-icon>
+          <span>ResearchGate</span>
+        </button>
+      </div>
       <div class="app-bar-spacer" aria-hidden="true"></div>
 
       <main id="top" class="page-shell">

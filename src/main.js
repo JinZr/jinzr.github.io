@@ -6,8 +6,6 @@ import '@material/web/icon/icon.js';
 import '@material/web/iconbutton/icon-button.js';
 import '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
 import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set.js';
-import '@material/web/menu/menu.js';
-import '@material/web/menu/menu-item.js';
 import '@material/web/progress/circular-progress.js';
 import './styles.css';
 
@@ -44,15 +42,44 @@ const createIcon = (name) => {
 };
 
 function setupLinks() {
-  document.querySelectorAll('[data-link]').forEach((element) => {
-    element.addEventListener('click', () => openExternal(element.dataset.link));
-  });
-
   const menuButton = document.querySelector('#more-menu-button');
   const menu = document.querySelector('#more-menu');
-  menuButton?.addEventListener('click', () => {
-    menu.open = !menu.open;
+
+  const closeMenu = () => {
+    menu?.classList.remove('open');
+    menu?.setAttribute('aria-hidden', 'true');
+    menuButton?.setAttribute('aria-expanded', 'false');
+  };
+
+  const openMenu = () => {
+    menu?.classList.add('open');
+    menu?.setAttribute('aria-hidden', 'false');
+    menuButton?.setAttribute('aria-expanded', 'true');
+  };
+
+  document.querySelectorAll('[data-link]').forEach((element) => {
+    element.addEventListener('click', () => {
+      if (element.closest('#more-menu')) closeMenu();
+      openExternal(element.dataset.link);
+    });
   });
+
+  menuButton?.addEventListener('click', () => {
+    if (menu?.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!menu?.classList.contains('open')) return;
+    const path = event.composedPath();
+    if (!path.includes(menu) && !path.includes(menuButton)) closeMenu();
+  }, { capture: true });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  window.matchMedia('(max-width: 1100px)').addEventListener('change', closeMenu);
 }
 
 function setupTopAppBarElevation() {

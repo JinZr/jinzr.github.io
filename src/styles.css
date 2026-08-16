@@ -208,7 +208,7 @@ a {
 md-filled-button,
 md-text-button,
 md-icon-button,
-md-menu-item,
+.profile-menu-item,
 md-outlined-segmented-button,
 md-outlined-segmented-button-set {
   -webkit-user-select: none;
@@ -420,25 +420,75 @@ md-outlined-segmented-button:active {
   transform: scale(0.96);
 }
 
-md-menu-item {
-  --md-menu-item-label-text-font: var(--md-ref-typeface-plain);
-  --md-menu-item-label-text-size: var(--type-body-large-size);
-  --md-menu-item-label-text-line-height: var(--type-body-large-line-height);
-  --md-menu-item-label-text-weight: var(--type-body-large-weight);
-  --md-menu-item-label-text-tracking: 0;
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
   font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-body-large-size);
   font-weight: var(--type-body-large-weight);
   line-height: var(--type-body-large-line-height);
   letter-spacing: 0;
+  text-align: left;
+}
+
+.profile-menu-item:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+.profile-menu-item:focus-visible,
+.profile-menu-item:active {
+  outline: none;
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
 }
 
 #more-menu-button {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-#more-menu {
+.profile-menu {
+  position: fixed;
+  top: 48px;
+  right: 4px;
   z-index: 20;
+  display: none;
+  flex-direction: column;
+  min-width: 176px;
+  padding: 8px 0;
+  border-radius: 4px;
+  background: var(--md-sys-color-surface-container);
+  box-shadow:
+    0 2px 2px color-mix(in srgb, var(--md-sys-color-shadow) 14%, transparent),
+    0 3px 5px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent),
+    0 1px 8px color-mix(in srgb, var(--md-sys-color-shadow) 20%, transparent);
+  transform-origin: top right;
+}
+
+.profile-menu.open {
+  display: flex;
+  animation: profile-menu-open 220ms var(--motion-emphasized-decelerate);
+}
+
+@keyframes profile-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .page-shell {
@@ -1002,11 +1052,17 @@ md-outlined-segmented-button {
 
 @media (max-width: 1100px) {
   .wide-action {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   #more-menu-button {
-    display: inline-flex;
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 }
 
