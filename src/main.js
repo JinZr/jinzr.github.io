@@ -359,21 +359,14 @@ function setupGallery() {
   const viewerTitle = document.querySelector('#viewer-title');
   const viewerCanvas = document.querySelector('#viewer-canvas');
   const viewerImage = document.querySelector('#viewer-image');
+  const viewerLoading = document.querySelector('#viewer-loading');
   const closeButton = document.querySelector('#viewer-close-button');
-  const zoomOutButton = document.querySelector('#viewer-zoom-out');
-  const zoomResetButton = document.querySelector('#viewer-zoom-reset');
-  const zoomInButton = document.querySelector('#viewer-zoom-in');
 
   let viewerZoom = 1;
   let viewerPanX = 0;
   let viewerPanY = 0;
-  let activePointerId;
-  let previousPointerX = 0;
-  let previousPointerY = 0;
-
-  const isZoomControl = (event) => event.composedPath().some(
-    (element) => element.classList?.contains('viewer-zoom-controls'),
-  );
+  let previousPinchDistance = 0;
+  const viewerPointers = new Map();
 
   const constrainViewerPan = () => {
     const availableWidth = Math.max(0, viewerCanvas.clientWidth - 16);
@@ -387,14 +380,20 @@ function setupGallery() {
   const updateViewerZoom = () => {
     constrainViewerPan();
     viewerImage.style.transform = `translate3d(${viewerPanX}px, ${viewerPanY}px, 0) scale(${viewerZoom})`;
-    zoomResetButton.textContent = `${Math.round(viewerZoom * 100)}%`;
-    zoomOutButton.disabled = viewerZoom <= 1;
-    zoomInButton.disabled = viewerZoom >= 4;
     viewer.classList.toggle('is-zoomed', viewerZoom > 1);
   };
 
-  const setViewerZoom = (zoom) => {
-    viewerZoom = Math.round(Math.min(4, Math.max(1, zoom)) * 100) / 100;
+  const setViewerZoom = (zoom, origin) => {
+    const nextZoom = Math.round(Math.min(4, Math.max(1, zoom)) * 100) / 100;
+    if (origin && nextZoom !== viewerZoom) {
+      const canvasRect = viewerCanvas.getBoundingClientRect();
+      const originX = origin.x - canvasRect.left - (canvasRect.width / 2);
+      const originY = origin.y - canvasRect.top - (canvasRect.height / 2);
+      const zoomRatio = nextZoom / viewerZoom;
+      viewerPanX = originX - ((originX - viewerPanX) * zoomRatio);
+      viewerPanY = originY - ((originY - viewerPanY) * zoomRatio);
+    }
+    viewerZoom = nextZoom;
     if (viewerZoom === 1) {
       viewerPanX = 0;
       viewerPanY = 0;
@@ -406,50 +405,82 @@ function setupGallery() {
     viewerZoom = 1;
     viewerPanX = 0;
     viewerPanY = 0;
+    previousPinchDistance = 0;
+    viewerPointers.clear();
     viewer.classList.remove('is-panning');
     updateViewerZoom();
   };
 
-  zoomOutButton?.addEventListener('click', () => setViewerZoom(viewerZoom - 0.5));
-  zoomResetButton?.addEventListener('click', resetViewerZoom);
-  zoomInButton?.addEventListener('click', () => setViewerZoom(viewerZoom + 0.5));
-  viewerImage?.addEventListener('load', resetViewerZoom);
+  const setViewerLoading = (isLoading) => {
+    viewer.classList.toggle('is-loading', isLoading);
+    viewerCanvas.setAttribute('aria-busy', String(isLoading));
+    viewerLoading.hidden = !isLoading;
+  };
+
+  viewerImage?.addEventListener('load', () => {
+    resetViewerZoom();
+    setViewerLoading(false);
+  });
+  viewerImage?.addEventListener('error', () => setViewerLoading(false));
   window.addEventListener('resize', updateViewerZoom);
 
   viewerCanvas?.addEventListener('wheel', (event) => {
-    if (isZoomControl(event)) return;
     event.preventDefault();
     const sensitivity = event.deltaMode === WheelEvent.DOM_DELTA_PIXEL ? 0.002 : 0.04;
-    setViewerZoom(viewerZoom - (event.deltaY * sensitivity));
+    setViewerZoom(viewerZoom - (event.deltaY * sensitivity), { x: event.clientX, y: event.clientY });
   }, { passive: false });
 
   viewerCanvas?.addEventListener('dblclick', (event) => {
-    if (isZoomControl(event)) return;
-    setViewerZoom(viewerZoom > 1 ? 1 : 2);
+    setViewerZoom(viewerZoom > 1 ? 1 : 2, { x: event.clientX, y: event.clientY });
   });
 
   viewerCanvas?.addEventListener('pointerdown', (event) => {
-    if (viewerZoom <= 1 || isZoomControl(event)) return;
-    activePointerId = event.pointerId;
-    previousPointerX = event.clientX;
-    previousPointerY = event.clientY;
-    viewer.classList.add('is-panning');
+    if (event.pointerType === 'mouse' && viewerZoom <= 1) return;
+    viewerPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     viewerCanvas.setPointerCapture(event.pointerId);
+    if (viewerPointers.size === 1 && viewerZoom > 1) viewer.classList.add('is-panning');
+    if (viewerPointers.size === 2) {
+      const [firstPointer, secondPointer] = [...viewerPointers.values()];
+      previousPinchDistance = Math.hypot(
+        secondPointer.x - firstPointer.x,
+        secondPointer.y - firstPointer.y,
+      );
+    }
   });
 
   viewerCanvas?.addEventListener('pointermove', (event) => {
-    if (event.pointerId !== activePointerId) return;
-    viewerPanX += event.clientX - previousPointerX;
-    viewerPanY += event.clientY - previousPointerY;
-    previousPointerX = event.clientX;
-    previousPointerY = event.clientY;
+    const previousPointer = viewerPointers.get(event.pointerId);
+    if (!previousPointer) return;
+    viewerPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (viewerPointers.size >= 2) {
+      viewer.classList.add('is-panning');
+      const [firstPointer, secondPointer] = [...viewerPointers.values()];
+      const pinchDistance = Math.hypot(
+        secondPointer.x - firstPointer.x,
+        secondPointer.y - firstPointer.y,
+      );
+      if (previousPinchDistance > 0) {
+        setViewerZoom(viewerZoom * (pinchDistance / previousPinchDistance), {
+          x: (firstPointer.x + secondPointer.x) / 2,
+          y: (firstPointer.y + secondPointer.y) / 2,
+        });
+      }
+      previousPinchDistance = pinchDistance;
+      return;
+    }
+
+    if (viewerZoom <= 1) return;
+    viewerPanX += event.clientX - previousPointer.x;
+    viewerPanY += event.clientY - previousPointer.y;
     updateViewerZoom();
   });
 
   const stopViewerPan = (event) => {
-    if (event.pointerId !== activePointerId) return;
-    activePointerId = undefined;
-    viewer.classList.remove('is-panning');
+    if (!viewerPointers.has(event.pointerId)) return;
+    viewerPointers.delete(event.pointerId);
+    if (viewerPointers.size < 2) previousPinchDistance = 0;
+    viewer.classList.toggle('is-panning', viewerPointers.size === 1 && viewerZoom > 1);
   };
 
   viewerCanvas?.addEventListener('pointerup', stopViewerPan);
@@ -505,6 +536,7 @@ function setupGallery() {
 
   const closeViewer = () => {
     resetViewerZoom();
+    setViewerLoading(false);
     viewer.open = false;
     viewer.removeAttribute('open');
     viewerImage.removeAttribute('src');
@@ -513,6 +545,7 @@ function setupGallery() {
   closeButton?.addEventListener('click', closeViewer);
   viewer?.addEventListener('closed', () => {
     resetViewerZoom();
+    setViewerLoading(false);
     viewerImage.removeAttribute('src');
   });
 
@@ -524,9 +557,12 @@ function setupGallery() {
     button.setAttribute('aria-label', `Open full image for ${item.title}`);
     button.addEventListener('click', () => {
       resetViewerZoom();
+      setViewerLoading(true);
       viewerTitle.textContent = item.title;
-      viewerImage.src = publicUrl(item.full);
       viewerImage.alt = `Polaroid photo from ${item.title}`;
+      viewerImage.width = item.width;
+      viewerImage.height = item.height;
+      viewerImage.src = publicUrl(item.full);
       viewer.open = true;
       viewer.setAttribute('open', '');
     });

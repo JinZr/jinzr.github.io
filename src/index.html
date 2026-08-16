@@ -193,16 +193,8 @@
           <md-text-button id="viewer-close-button">Close</md-text-button>
         </div>
         <div id="viewer-canvas" class="viewer-canvas">
+          <md-circular-progress id="viewer-loading" indeterminate aria-label="Loading full-size photo" hidden></md-circular-progress>
           <img id="viewer-image" alt="" draggable="false" />
-          <div class="viewer-zoom-controls" role="group" aria-label="Photo zoom controls">
-            <md-icon-button id="viewer-zoom-out" aria-label="Zoom out">
-              <span class="viewer-zoom-symbol" aria-hidden="true">−</span>
-            </md-icon-button>
-            <md-text-button id="viewer-zoom-reset" aria-label="Reset zoom">100%</md-text-button>
-            <md-icon-button id="viewer-zoom-in" aria-label="Zoom in">
-              <span class="viewer-zoom-symbol" aria-hidden="true">+</span>
-            </md-icon-button>
-          </div>
         </div>
       </div>
     </md-dialog>

@@ -1009,6 +1009,20 @@ md-outlined-segmented-button {
   -webkit-user-drag: none;
 }
 
+#viewer-loading {
+  position: absolute;
+  z-index: 1;
+  --md-circular-progress-size: 48px;
+}
+
+#viewer-loading[hidden] {
+  display: none;
+}
+
+.gallery-viewer.is-loading #viewer-image {
+  opacity: 0;
+}
+
 .gallery-viewer.is-zoomed .viewer-canvas {
   cursor: grab;
 }
@@ -1019,32 +1033,6 @@ md-outlined-segmented-button {
 
 .gallery-viewer.is-panning #viewer-image {
   transition: none;
-}
-
-.viewer-zoom-controls {
-  position: absolute;
-  left: 50%;
-  bottom: 16px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 2px 4px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, transparent);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--md-sys-color-shadow) 18%, transparent);
-  transform: translateX(-50%);
-  touch-action: manipulation;
-}
-
-.viewer-zoom-symbol {
-  font-family: var(--md-ref-typeface-plain);
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-#viewer-zoom-reset {
-  min-width: 64px;
 }
 
 .toast {
