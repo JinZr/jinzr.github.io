@@ -205,6 +205,7 @@ a {
 .site-footer,
 .gallery-viewer,
 .toast,
+md-filled-button,
 md-text-button,
 md-icon-button,
 .top-action-button,
@@ -350,6 +351,29 @@ md-icon,
   gap: 0;
 }
 
+.top-app-bar md-filled-button {
+  --md-filled-button-container-color: var(--md-sys-color-on-primary);
+  --md-filled-button-label-text-color: var(--md-sys-color-primary);
+  --md-filled-button-hover-label-text-color: var(--md-sys-color-primary);
+  --md-filled-button-focus-label-text-color: var(--md-sys-color-primary);
+  --md-filled-button-pressed-label-text-color: var(--md-sys-color-primary);
+}
+
+md-filled-button {
+  --md-filled-button-container-height: 40px;
+  --md-filled-button-container-shape: 999px;
+  --md-filled-button-label-text-font: var(--md-ref-typeface-plain);
+  --md-filled-button-label-text-size: var(--type-label-large-size);
+  --md-filled-button-label-text-line-height: var(--type-label-large-line-height);
+  --md-filled-button-label-text-weight: var(--type-label-large-weight);
+  --md-filled-button-label-text-tracking: 0;
+  font-family: var(--md-ref-typeface-plain);
+  font-size: var(--type-label-large-size);
+  font-weight: var(--type-label-large-weight);
+  line-height: var(--type-label-large-line-height);
+  letter-spacing: 0;
+}
+
 .top-action-button,
 .top-action-icon-button {
   -webkit-appearance: none;
@@ -382,12 +406,6 @@ md-icon,
   background: transparent;
 }
 
-.top-action-filled {
-  padding: 0 24px;
-  background: var(--md-sys-color-on-primary);
-  color: var(--md-sys-color-primary);
-}
-
 .top-action-icon-button {
   width: 40px;
   padding: 0;
@@ -401,12 +419,6 @@ md-icon,
 .top-action-icon-button:focus-visible {
   outline: none;
   background: color-mix(in srgb, var(--app-bar-foreground) 12%, transparent);
-}
-
-.top-action-filled:hover,
-.top-action-filled:focus-visible {
-  outline: none;
-  background: color-mix(in srgb, var(--md-sys-color-on-primary) 88%, var(--md-sys-color-primary));
 }
 
 md-text-button {
@@ -424,6 +436,7 @@ md-text-button {
   letter-spacing: 0;
 }
 
+md-filled-button,
 md-text-button,
 md-icon-button,
 md-outlined-segmented-button {
@@ -432,6 +445,7 @@ md-outlined-segmented-button {
   transition: transform 350ms var(--motion-spring);
 }
 
+md-filled-button:active,
 md-text-button:active,
 md-icon-button:active,
 .top-action-button:active,
