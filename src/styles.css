@@ -205,9 +205,10 @@ a {
 .site-footer,
 .gallery-viewer,
 .toast,
-md-filled-button,
 md-text-button,
 md-icon-button,
+.top-action-button,
+.top-action-icon-button,
 .profile-menu-item,
 md-outlined-segmented-button,
 md-outlined-segmented-button-set {
@@ -349,41 +350,63 @@ md-icon,
   gap: 0;
 }
 
-.top-app-bar md-text-button {
-  --md-text-button-label-text-color: var(--app-bar-foreground);
-  --md-text-button-hover-label-text-color: var(--app-bar-foreground);
-  --md-text-button-focus-label-text-color: var(--app-bar-foreground);
-  --md-text-button-pressed-label-text-color: var(--app-bar-foreground);
-}
-
-.top-app-bar md-icon-button {
-  --md-icon-button-icon-color: var(--app-bar-foreground);
-  --md-icon-button-hover-icon-color: var(--app-bar-foreground);
-  --md-icon-button-focus-icon-color: var(--app-bar-foreground);
-  --md-icon-button-pressed-icon-color: var(--app-bar-foreground);
-}
-
-.top-app-bar md-filled-button {
-  --md-filled-button-container-color: var(--md-sys-color-on-primary);
-  --md-filled-button-label-text-color: var(--md-sys-color-primary);
-  --md-filled-button-hover-label-text-color: var(--md-sys-color-primary);
-  --md-filled-button-focus-label-text-color: var(--md-sys-color-primary);
-  --md-filled-button-pressed-label-text-color: var(--md-sys-color-primary);
-}
-
-md-filled-button {
-  --md-filled-button-container-height: 40px;
-  --md-filled-button-container-shape: 999px;
-  --md-filled-button-label-text-font: var(--md-ref-typeface-plain);
-  --md-filled-button-label-text-size: var(--type-label-large-size);
-  --md-filled-button-label-text-line-height: var(--type-label-large-line-height);
-  --md-filled-button-label-text-weight: var(--type-label-large-weight);
-  --md-filled-button-label-text-tracking: 0;
+.top-action-button,
+.top-action-icon-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: 0;
+  color: var(--app-bar-foreground);
+  cursor: pointer;
   font-family: var(--md-ref-typeface-plain);
   font-size: var(--type-label-large-size);
   font-weight: var(--type-label-large-weight);
   line-height: var(--type-label-large-line-height);
   letter-spacing: 0;
+  white-space: nowrap;
+  touch-action: manipulation;
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    background-color 200ms var(--motion-standard),
+    transform 350ms var(--motion-spring);
+}
+
+.top-action-button {
+  min-width: 48px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.top-action-filled {
+  padding: 0 24px;
+  background: var(--md-sys-color-on-primary);
+  color: var(--md-sys-color-primary);
+}
+
+.top-action-icon-button {
+  width: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.top-action-text:hover,
+.top-action-text:focus-visible,
+.top-action-icon-button:hover,
+.top-action-icon-button:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--app-bar-foreground) 12%, transparent);
+}
+
+.top-action-filled:hover,
+.top-action-filled:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--md-sys-color-on-primary) 88%, var(--md-sys-color-primary));
 }
 
 md-text-button {
@@ -401,7 +424,6 @@ md-text-button {
   letter-spacing: 0;
 }
 
-md-filled-button,
 md-text-button,
 md-icon-button,
 md-outlined-segmented-button {
@@ -410,9 +432,10 @@ md-outlined-segmented-button {
   transition: transform 350ms var(--motion-spring);
 }
 
-md-filled-button:active,
 md-text-button:active,
-md-icon-button:active {
+md-icon-button:active,
+.top-action-button:active,
+.top-action-icon-button:active {
   transform: scale(0.92);
 }
 
@@ -450,10 +473,7 @@ md-outlined-segmented-button:active {
 }
 
 #more-menu-button {
-  position: absolute;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
 }
 
 .profile-menu {
@@ -1052,17 +1072,11 @@ md-outlined-segmented-button {
 
 @media (max-width: 1100px) {
   .wide-action {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    display: none;
   }
 
   #more-menu-button {
-    position: static;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    display: inline-flex;
   }
 }
 
@@ -1122,10 +1136,5 @@ md-outlined-segmented-button {
 @media (max-width: 430px) {
   .app-title {
     font-size: var(--type-title-large-size);
-  }
-
-  .top-actions md-filled-button {
-    --md-filled-button-container-height: 40px;
-    --md-filled-button-label-text-size: var(--type-label-large-size);
   }
 }
