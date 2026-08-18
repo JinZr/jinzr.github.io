@@ -404,6 +404,13 @@ md-filled-button {
   padding: 0 12px;
   border-radius: 999px;
   background: transparent;
+  gap: 6px;
+}
+
+.top-action-button md-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }
 
 .top-action-icon-button {
@@ -878,6 +885,10 @@ md-outlined-segmented-button {
   transform: scale(1.025);
 }
 
+.gallery-tile.is-viewing img {
+  opacity: 0;
+}
+
 .gallery-tile::after {
   content: '';
   position: absolute;
@@ -932,6 +943,7 @@ md-outlined-segmented-button {
 }
 
 .gallery-viewer {
+  --viewer-image-aspect: 0.823;
   --md-dialog-container-color: var(--md-sys-color-surface-container-high);
   --md-dialog-container-shape: 28px;
   --md-dialog-supporting-text-font: var(--md-ref-typeface-plain);
@@ -939,8 +951,8 @@ md-outlined-segmented-button {
   --md-dialog-supporting-text-line-height: var(--type-body-medium-line-height);
   --md-dialog-supporting-text-weight: var(--type-body-medium-weight);
   --md-dialog-supporting-text-tracking: 0;
-  width: min(880px, calc(100vw - 32px));
-  max-width: min(880px, calc(100vw - 32px));
+  width: min(calc((min(72dvh, 720px) * var(--viewer-image-aspect)) + 32px), calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
   max-height: calc(100dvh - 32px);
 }
 
@@ -953,10 +965,11 @@ md-outlined-segmented-button {
 
 .viewer-content {
   display: grid;
-  gap: 12px;
+  gap: 8px;
+  padding: 12px 16px 14px;
 }
 
-.viewer-header {
+.viewer-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -964,15 +977,28 @@ md-outlined-segmented-button {
   width: 100%;
 }
 
+.viewer-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.viewer-location md-icon {
+  flex: none;
+  color: var(--md-sys-color-primary);
+  font-size: 20px;
+}
+
 #viewer-title {
   overflow: hidden;
   min-width: 0;
   margin: 0;
   color: var(--md-sys-color-on-surface);
-  font-family: var(--md-ref-typeface-brand);
-  font-size: var(--type-card-header-size);
-  font-weight: var(--type-card-header-weight);
-  line-height: var(--type-card-header-line-height);
+  font-family: var(--md-ref-typeface-plain);
+  font-size: var(--type-body-large-size);
+  font-weight: 500;
+  line-height: var(--type-body-large-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -988,7 +1014,7 @@ md-outlined-segmented-button {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 8px;
+  padding: 0;
   overflow: hidden;
   border-radius: var(--media-radius);
   background: var(--md-sys-color-surface-container-lowest);
@@ -998,13 +1024,17 @@ md-outlined-segmented-button {
 
 #viewer-image {
   display: block;
+  width: auto;
+  height: auto;
   max-width: 100%;
   max-height: min(72dvh, 720px);
   border-radius: calc(var(--media-radius) - 4px);
   object-fit: contain;
   transform: translate3d(0, 0, 0) scale(1);
   transform-origin: center;
-  transition: transform 240ms var(--motion-emphasized-decelerate);
+  transition:
+    opacity 180ms var(--motion-standard),
+    transform 240ms var(--motion-emphasized-decelerate);
   will-change: transform;
   -webkit-user-drag: none;
 }
@@ -1012,6 +1042,9 @@ md-outlined-segmented-button {
 #viewer-loading {
   position: absolute;
   z-index: 1;
+  padding: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 88%, transparent);
   --md-circular-progress-size: 48px;
 }
 
@@ -1020,7 +1053,7 @@ md-outlined-segmented-button {
 }
 
 .gallery-viewer.is-loading #viewer-image {
-  opacity: 0;
+  opacity: 0.72;
 }
 
 .gallery-viewer.is-zoomed .viewer-canvas {

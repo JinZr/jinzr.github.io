@@ -21,8 +21,8 @@
     <link rel="apple-touch-icon" href="./icons/Icon-512.webp" />
     <link rel="manifest" href="./manifest.json" />
     <title>Zengrui Jin</title>
-    <script type="module" crossorigin src="./site-assets/index-3SuLBFNS.js"></script>
-    <link rel="stylesheet" crossorigin href="./site-assets/index-BRJ0IJGd.css">
+    <script type="module" crossorigin src="./site-assets/index-CxaKcQLG.js"></script>
+    <link rel="stylesheet" crossorigin href="./site-assets/index-BtaIfjog.css">
   </head>
   <body>
     <div id="app">
@@ -34,6 +34,7 @@
               Google Scholar
             </md-filled-button>
             <button class="top-action-button top-action-text wide-action" type="button" data-link="https://github.com/JinZr">
+              <md-icon aria-hidden="true">&#xe86f;</md-icon>
               GitHub
             </button>
             <button
@@ -41,6 +42,7 @@
               type="button"
               data-link="https://www.researchgate.net/profile/Zengrui-Jin"
             >
+              <md-icon aria-hidden="true">&#xea4b;</md-icon>
               ResearchGate
             </button>
             <button
@@ -190,13 +192,16 @@
 
     <md-dialog id="gallery-viewer" class="gallery-viewer" aria-labelledby="viewer-title">
       <div slot="content" class="viewer-content">
-        <div class="viewer-header">
-          <h2 id="viewer-title">Photo</h2>
-          <md-text-button id="viewer-close-button">Close</md-text-button>
-        </div>
         <div id="viewer-canvas" class="viewer-canvas">
           <md-circular-progress id="viewer-loading" indeterminate aria-label="Loading full-size photo" hidden></md-circular-progress>
           <img id="viewer-image" alt="" draggable="false" />
+        </div>
+        <div class="viewer-footer">
+          <div class="viewer-location">
+            <md-icon aria-hidden="true">&#xf1db;</md-icon>
+            <h2 id="viewer-title">Photo</h2>
+          </div>
+          <md-text-button id="viewer-close-button">Close</md-text-button>
         </div>
       </div>
     </md-dialog>

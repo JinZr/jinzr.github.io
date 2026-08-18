@@ -360,17 +360,22 @@ function setupGallery() {
   const viewerCanvas = document.querySelector('#viewer-canvas');
   const viewerImage = document.querySelector('#viewer-image');
   const viewerLoading = document.querySelector('#viewer-loading');
+  const viewerFooter = document.querySelector('.viewer-footer');
   const closeButton = document.querySelector('#viewer-close-button');
 
   let viewerZoom = 1;
   let viewerPanX = 0;
   let viewerPanY = 0;
   let previousPinchDistance = 0;
+  let activeTile = null;
+  let imageRequest = 0;
+  let heroAnimation = null;
+  let footerAnimation = null;
   const viewerPointers = new Map();
 
   const constrainViewerPan = () => {
-    const availableWidth = Math.max(0, viewerCanvas.clientWidth - 16);
-    const availableHeight = Math.max(0, viewerCanvas.clientHeight - 16);
+    const availableWidth = viewerCanvas.clientWidth;
+    const availableHeight = viewerCanvas.clientHeight;
     const maxPanX = Math.max(0, ((viewerImage.offsetWidth * viewerZoom) - availableWidth) / 2);
     const maxPanY = Math.max(0, ((viewerImage.offsetHeight * viewerZoom) - availableHeight) / 2);
     viewerPanX = Math.min(maxPanX, Math.max(-maxPanX, viewerPanX));
@@ -417,11 +422,6 @@ function setupGallery() {
     viewerLoading.hidden = !isLoading;
   };
 
-  viewerImage?.addEventListener('load', () => {
-    resetViewerZoom();
-    setViewerLoading(false);
-  });
-  viewerImage?.addEventListener('error', () => setViewerLoading(false));
   window.addEventListener('resize', updateViewerZoom);
 
   viewerCanvas?.addEventListener('wheel', (event) => {
@@ -486,67 +486,155 @@ function setupGallery() {
   viewerCanvas?.addEventListener('pointerup', stopViewerPan);
   viewerCanvas?.addEventListener('pointercancel', stopViewerPan);
 
-  viewer.getOpenAnimation = () => ({
-    dialog: [
-      [
-        [
-          { opacity: 0, transform: 'translateY(24px) scale(0.92)' },
-          { opacity: 1, transform: 'translateY(0) scale(1)' },
-        ],
-        { duration: 420, easing: 'cubic-bezier(.05,.7,.1,1)' },
-      ],
-    ],
-    scrim: [
-      [
-        [{ opacity: 0 }, { opacity: 0.32 }],
-        { duration: 300, easing: 'linear' },
-      ],
-    ],
-    content: [
-      [
-        [{ opacity: 0 }, { opacity: 0, offset: 0.22 }, { opacity: 1 }],
-        { duration: 320, easing: 'linear', fill: 'forwards' },
-      ],
-    ],
-  });
+  const getHeroKeyframes = (opening) => {
+    const sourceRect = activeTile?.getBoundingClientRect();
+    const targetRect = viewerImage.getBoundingClientRect();
+    if (!sourceRect?.width || !targetRect.width) return null;
 
-  viewer.getCloseAnimation = () => ({
-    dialog: [
+    const scale = Math.max(
+      sourceRect.width / targetRect.width,
+      sourceRect.height / targetRect.height,
+    );
+    const visibleWidth = sourceRect.width / scale;
+    const visibleHeight = sourceRect.height / scale;
+    const clipX = Math.max(0, (targetRect.width - visibleWidth) / 2);
+    const clipY = Math.max(0, (targetRect.height - visibleHeight) / 2);
+    const translateX = sourceRect.left + (sourceRect.width / 2) - targetRect.left - (targetRect.width / 2);
+    const translateY = sourceRect.top + (sourceRect.height / 2) - targetRect.top - (targetRect.height / 2);
+    const sourceRadius = Number.parseFloat(getComputedStyle(activeTile).borderRadius) / scale;
+    const targetRadius = Number.parseFloat(getComputedStyle(viewerImage).borderRadius);
+    const sourceFrame = {
+      transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
+      clipPath: `inset(${clipY}px ${clipX}px ${clipY}px ${clipX}px round ${sourceRadius}px)`,
+      borderRadius: `${sourceRadius}px`,
+    };
+    const targetFrame = {
+      transform: 'translate3d(0, 0, 0) scale(1)',
+      clipPath: `inset(0 0 0 0 round ${targetRadius}px)`,
+      borderRadius: `${targetRadius}px`,
+    };
+    return opening ? [sourceFrame, targetFrame] : [targetFrame, sourceFrame];
+  };
+
+  const animateHero = (opening, duration) => {
+    heroAnimation?.cancel();
+    const keyframes = getHeroKeyframes(opening);
+    if (!keyframes) return;
+    if (opening) activeTile.classList.add('is-viewing');
+    const animation = viewerImage.animate(keyframes, {
+      duration,
+      easing: opening ? 'cubic-bezier(.05,.7,.1,1)' : 'cubic-bezier(.3,0,.8,.15)',
+      fill: 'both',
+    });
+    heroAnimation = animation;
+    animation.finished.catch(() => {}).then(() => {
+      if (heroAnimation !== animation) return;
+      animation.cancel();
+      heroAnimation = null;
+    });
+  };
+
+  const animateFooter = (keyframes, options) => {
+    footerAnimation?.cancel();
+    const animation = viewerFooter.animate(keyframes, { ...options, fill: 'both' });
+    footerAnimation = animation;
+    animation.finished.catch(() => {}).then(() => {
+      if (footerAnimation !== animation) return;
+      animation.cancel();
+      footerAnimation = null;
+    });
+  };
+
+  viewer.getOpenAnimation = () => {
+    animateHero(true, 460);
+    animateFooter(
       [
+        { opacity: 0, transform: 'translateY(8px)' },
+        { opacity: 0, transform: 'translateY(8px)', offset: 0.42 },
+        { opacity: 1, transform: 'translateY(0)' },
+      ],
+      { duration: 460, easing: 'cubic-bezier(.05,.7,.1,1)' },
+    );
+    return {
+      dialog: [
         [
-          { opacity: 1, transform: 'translateY(0) scale(1)' },
-          { opacity: 0, transform: 'translateY(12px) scale(0.96)' },
+          [{ opacity: 1 }, { opacity: 1 }],
+          { duration: 460 },
         ],
-        { duration: 180, easing: 'cubic-bezier(.3,0,.8,.15)' },
       ],
-    ],
-    scrim: [
-      [
-        [{ opacity: 0.32 }, { opacity: 0 }],
-        { duration: 180, easing: 'linear' },
+      scrim: [
+        [
+          [{ opacity: 0 }, { opacity: 0.32 }],
+          { duration: 300, easing: 'linear' },
+        ],
       ],
-    ],
-    content: [
-      [
-        [{ opacity: 1 }, { opacity: 0 }],
-        { duration: 120, easing: 'linear', fill: 'forwards' },
+      container: [
+        [
+          [{ opacity: 0 }, { opacity: 0, offset: 0.34 }, { opacity: 1 }],
+          { duration: 460, easing: 'linear', pseudoElement: '::before' },
+        ],
       ],
-    ],
-  });
+    };
+  };
+
+  viewer.getCloseAnimation = () => {
+    animateHero(false, 260);
+    animateFooter(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 120, easing: 'linear' },
+    );
+    return {
+      dialog: [
+        [
+          [{ opacity: 1 }, { opacity: 1 }],
+          { duration: 260 },
+        ],
+      ],
+      scrim: [
+        [
+          [{ opacity: 0.32 }, { opacity: 0 }],
+          { duration: 260, easing: 'linear' },
+        ],
+      ],
+      container: [
+        [
+          [{ opacity: 1 }, { opacity: 0 }],
+          { delay: 90, duration: 170, easing: 'linear', pseudoElement: '::before' },
+        ],
+      ],
+    };
+  };
+
+  const loadFullImage = async (src, request) => {
+    const fullImage = new Image();
+    fullImage.src = src;
+    try {
+      await fullImage.decode();
+    } catch {
+      if (request === imageRequest) setViewerLoading(false);
+      return;
+    }
+    if (request !== imageRequest) return;
+    viewerImage.src = src;
+    setViewerLoading(false);
+  };
 
   const closeViewer = () => {
-    resetViewerZoom();
-    setViewerLoading(false);
     viewer.open = false;
-    viewer.removeAttribute('open');
-    viewerImage.removeAttribute('src');
   };
 
   closeButton?.addEventListener('click', closeViewer);
+  viewer?.addEventListener('close', () => {
+    imageRequest += 1;
+    resetViewerZoom();
+    setViewerLoading(false);
+  });
   viewer?.addEventListener('closed', () => {
     resetViewerZoom();
     setViewerLoading(false);
     viewerImage.removeAttribute('src');
+    activeTile?.classList.remove('is-viewing');
+    activeTile = null;
   });
 
   const tiles = galleryItems.map((item, index) => {
@@ -556,15 +644,18 @@ function setupGallery() {
     button.type = 'button';
     button.setAttribute('aria-label', `Open full image for ${item.title}`);
     button.addEventListener('click', () => {
+      activeTile = button;
       resetViewerZoom();
       setViewerLoading(true);
       viewerTitle.textContent = item.title;
       viewerImage.alt = `Polaroid photo from ${item.title}`;
       viewerImage.width = item.width;
       viewerImage.height = item.height;
-      viewerImage.src = publicUrl(item.full);
+      viewer.style.setProperty('--viewer-image-aspect', item.width / item.height);
+      viewerImage.src = image.currentSrc || image.src;
+      const request = ++imageRequest;
       viewer.open = true;
-      viewer.setAttribute('open', '');
+      loadFullImage(publicUrl(item.full), request);
     });
 
     const image = document.createElement('img');
