@@ -265,6 +265,70 @@ function renderPublicationFilters(items) {
   const filters = document.querySelector('#publication-filters');
   const themes = [...new Set(items.map(publicationTheme))];
   let selectedTheme = themes[0];
+  let publicationTransition = 0;
+  let publicationAnimations = [];
+
+  const transitionPublications = async () => {
+    const list = document.querySelector('#publication-list');
+    const transition = ++publicationTransition;
+
+    publicationAnimations.forEach((animation) => animation.cancel());
+    publicationAnimations = [];
+    list.style.removeProperty('height');
+    list.style.removeProperty('overflow');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      renderPublications(items, selectedTheme);
+      return;
+    }
+
+    const startHeight = list.getBoundingClientRect().height;
+    const outgoingAnimations = [...list.children].map((card) => card.animate([
+      { opacity: 1, transform: 'translateY(0) scale(1)' },
+      { opacity: 0, transform: 'translateY(-4px) scale(0.995)' },
+    ], {
+      duration: 110,
+      easing: 'cubic-bezier(.3,0,.8,.15)',
+      fill: 'forwards',
+    }));
+    publicationAnimations = outgoingAnimations;
+
+    await Promise.all(outgoingAnimations.map((animation) => animation.finished.catch(() => {})));
+    if (transition !== publicationTransition) return;
+
+    renderPublications(items, selectedTheme);
+    const cards = [...list.children];
+    const endHeight = list.getBoundingClientRect().height;
+    list.style.height = `${startHeight}px`;
+    list.style.overflow = 'hidden';
+
+    const heightAnimation = list.animate([
+      { height: `${startHeight}px` },
+      { height: `${endHeight}px` },
+    ], {
+      duration: 320,
+      easing: 'cubic-bezier(.05,.7,.1,1)',
+      fill: 'both',
+    });
+    const incomingAnimations = cards.map((card, index) => card.animate([
+      { opacity: 0, transform: 'translateY(6px) scale(0.995)' },
+      { opacity: 1, transform: 'translateY(0) scale(1)' },
+    ], {
+      duration: 280,
+      delay: Math.min(index * 28, 112),
+      easing: 'cubic-bezier(.05,.7,.1,1)',
+      fill: 'both',
+    }));
+    const activeAnimations = [heightAnimation, ...incomingAnimations];
+    publicationAnimations = activeAnimations;
+
+    await Promise.all(activeAnimations.map((animation) => animation.finished.catch(() => {})));
+    if (transition !== publicationTransition) return;
+    list.style.removeProperty('height');
+    list.style.removeProperty('overflow');
+    activeAnimations.forEach((animation) => animation.cancel());
+    publicationAnimations = [];
+  };
 
   const themeControl = document.createElement('md-outlined-segmented-button-set');
   themeControl.className = 'theme-segmented-button-set';
@@ -278,7 +342,7 @@ function renderPublicationFilters(items) {
 
   themeControl.addEventListener('segmented-button-set-selection', (event) => {
     selectedTheme = themes[event.detail.index];
-    renderPublications(items, selectedTheme);
+    transitionPublications();
 
     buttons[event.detail.index]?.animate([
       { transform: 'scale(0.94)' },
@@ -287,14 +351,6 @@ function renderPublicationFilters(items) {
     ], {
       duration: 450,
       easing: 'cubic-bezier(.42,1.67,.21,.9)',
-    });
-
-    document.querySelector('#publication-list')?.animate([
-      { opacity: 0.72, transform: 'translateY(6px) scale(0.995)' },
-      { opacity: 1, transform: 'translateY(0) scale(1)' },
-    ], {
-      duration: 360,
-      easing: 'cubic-bezier(.05,.7,.1,1)',
     });
   });
 
