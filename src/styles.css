@@ -1064,6 +1064,10 @@ md-outlined-segmented-button {
   background: transparent;
 }
 
+.gallery-viewer.is-closing .viewer-footer {
+  opacity: 0;
+}
+
 .gallery-viewer.is-zoomed .viewer-canvas {
   cursor: grab;
 }
