@@ -1056,6 +1056,14 @@ md-outlined-segmented-button {
   opacity: 0.72;
 }
 
+.gallery-viewer.is-closing {
+  --md-dialog-container-color: transparent;
+}
+
+.gallery-viewer.is-closing .viewer-canvas {
+  background: transparent;
+}
+
 .gallery-viewer.is-zoomed .viewer-canvas {
   cursor: grab;
 }

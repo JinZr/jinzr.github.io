@@ -626,10 +626,12 @@ function setupGallery() {
   closeButton?.addEventListener('click', closeViewer);
   viewer?.addEventListener('close', () => {
     imageRequest += 1;
+    viewer.classList.add('is-closing');
     resetViewerZoom();
     setViewerLoading(false);
   });
   viewer?.addEventListener('closed', () => {
+    viewer.classList.remove('is-closing');
     resetViewerZoom();
     setViewerLoading(false);
     viewerImage.removeAttribute('src');
@@ -644,6 +646,7 @@ function setupGallery() {
     button.type = 'button';
     button.setAttribute('aria-label', `Open full image for ${item.title}`);
     button.addEventListener('click', () => {
+      viewer.classList.remove('is-closing');
       activeTile = button;
       resetViewerZoom();
       setViewerLoading(true);
