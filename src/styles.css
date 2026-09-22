@@ -818,6 +818,60 @@ md-outlined-segmented-button {
   gap: var(--list-item-gap);
 }
 
+#service-list {
+  gap: 20px;
+}
+
+.service-group-title {
+  margin: 0 var(--card-inner-horizontal) 4px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--type-label-large-size);
+  font-weight: var(--type-label-large-weight);
+  line-height: var(--type-label-large-line-height);
+}
+
+.service-tile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+  row-gap: 4px;
+  padding-block: 10px;
+}
+
+.service-tile .tile-title,
+.service-tile .tile-support {
+  display: block;
+  overflow: visible;
+  grid-column: 1;
+  margin: 0;
+}
+
+.service-location {
+  grid-column: 1;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--type-body-small-size);
+  line-height: var(--type-body-small-line-height);
+}
+
+.service-year {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--md-sys-color-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+div.service-tile {
+  cursor: default;
+}
+
+div.service-tile:hover,
+div.service-tile:active {
+  border-radius: var(--container-radius);
+  background: var(--md-sys-color-surface-container-low);
+  box-shadow: none;
+  transform: none;
+}
+
 .tile-stack md-circular-progress {
   align-self: center;
   margin: 8px 0;
@@ -1128,6 +1182,11 @@ md-outlined-segmented-button {
 }
 
 @media (max-width: 700px) {
+  .service-tile .tile-support,
+  .service-location {
+    grid-column: 1 / -1;
+  }
+
   :root {
     --app-bar-expanded-height: 220px;
     --type-card-header-size: 22px;

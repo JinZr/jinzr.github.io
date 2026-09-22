@@ -360,31 +360,36 @@ function renderPublicationFilters(items) {
 }
 
 function buildServiceCard(item) {
-  const tile = document.createElement('a');
+  const tile = document.createElement(item.link ? 'a' : 'div');
   tile.className = 'content-tile service-tile';
-  tile.href = item.link || '#';
-  tile.target = '_blank';
-  tile.rel = 'noopener';
-
-  tile.append(createTextSpan('tile-title', item.role || 'Service'));
-  if (item.organization) {
-    tile.append(createTextSpan('tile-support', item.organization));
+  if (item.link) {
+    tile.href = item.link;
+    tile.target = '_blank';
+    tile.rel = 'noopener';
   }
 
-  if (item.location || item.year) {
-    const metadata = document.createElement('span');
-    metadata.className = 'metadata-row';
-    if (item.location) metadata.append(createMetadataChip('place', item.location));
-    if (item.year) metadata.append(createMetadataChip('calendar_today', item.year));
-    tile.append(metadata);
-  }
+  tile.append(createTextSpan('tile-title', item.organization));
+  tile.append(createTextSpan('tile-support', item.role));
+  if (item.location) tile.append(createTextSpan('service-location', item.location));
+  tile.append(createTextSpan('service-year', item.year));
 
   return tile;
 }
 
 function renderServices(items) {
   const list = document.querySelector('#service-list');
-  list.replaceChildren(...items.map(buildServiceCard));
+  list.replaceChildren(...['Peer Review', 'Conference Organization'].map((category) => {
+    const group = document.createElement('section');
+    group.className = 'service-group';
+    const heading = document.createElement('h3');
+    heading.className = 'service-group-title';
+    heading.textContent = category;
+    group.append(heading, ...items
+      .filter((item) => item.category === category)
+      .sort((a, b) => Number(b.year) - Number(a.year))
+      .map(buildServiceCard));
+    return group;
+  }));
 }
 
 function renderLoadError(containerSelector, message) {

@@ -1,5 +1,18 @@
 [
   {
+    "category": "Peer Review",
+    "role": "Area Chair",
+    "organization": "ICLR",
+    "year": "2027"
+  },
+  {
+    "category": "Peer Review",
+    "role": "Program Committee Member",
+    "organization": "AAAI",
+    "year": "2027"
+  },
+  {
+    "category": "Conference Organization",
     "role": "Local Arrangement Chair - Operations Chairs",
     "organization": "IEEE ICASSP Suzhou Satellite Event",
     "location": "Suzhou, China",
@@ -7,6 +20,7 @@
     "link": "https://2025.ieeeicassp.org/suzhou-satellite-event/"
   },
   {
+    "category": "Conference Organization",
     "role": "Local Arrangement Chair",
     "organization": "RLChina",
     "location": "Beijing, China",
