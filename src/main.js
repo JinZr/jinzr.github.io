@@ -93,7 +93,7 @@ function setupTopAppBarElevation() {
     const expandedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-expanded-height'));
     const collapsedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-collapsed-height'));
     const collapseRange = expandedHeight - collapsedHeight;
-    const collapse = Math.min(window.scrollY, collapseRange);
+    const collapse = Math.max(0, Math.min(window.scrollY, collapseRange));
 
     topAppBar.style.setProperty('--app-bar-collapse', `${collapse}px`);
     topAppBar.style.setProperty('--app-bar-progress', (collapse / collapseRange).toFixed(4));

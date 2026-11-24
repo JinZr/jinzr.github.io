@@ -239,6 +239,10 @@ md-icon,
 .top-app-bar {
   --app-bar-collapse: 0px;
   --app-bar-progress: 0;
+  --app-bar-open: calc(1 - var(--app-bar-progress));
+  --expanded-title-size: 40px;
+  --expanded-title-indent: max(4px, calc((100% - var(--page-max-width)) / 2 + 4px));
+  --expanded-title-bottom: 24px;
   --app-bar-foreground: color-mix(
     in srgb,
     #ffffff calc((1 - var(--app-bar-progress)) * 100%),
@@ -301,48 +305,23 @@ md-icon,
 
 .app-bar-toolbar {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   height: var(--app-bar-collapsed-height);
   padding: 0 4px 0 16px;
 }
 
 .app-title {
-  overflow: hidden;
-  flex: 1 1 auto;
-  min-width: 0;
-  padding-right: 16px;
+  position: absolute;
+  left: calc(16px + var(--expanded-title-indent) * var(--app-bar-open));
+  bottom: calc(16px + (var(--expanded-title-bottom) - 16px) * var(--app-bar-open));
+  pointer-events: none;
   font-family: var(--md-ref-typeface-brand);
-  font-size: var(--type-title-large-size);
+  font-size: calc(var(--type-title-large-size) + (var(--expanded-title-size) - var(--type-title-large-size)) * var(--app-bar-open));
   font-weight: var(--type-title-large-weight);
-  line-height: var(--type-title-large-line-height);
-  text-overflow: ellipsis;
+  line-height: calc(1em + 8px);
   text-shadow: 0 1px 3px rgb(0 0 0 / 45%);
   white-space: nowrap;
-  opacity: clamp(0, calc((var(--app-bar-progress) - 0.55) * 2.25), 1);
-  transform: translateY(calc((1 - var(--app-bar-progress)) * -8px));
-  will-change: opacity, transform;
-}
-
-.app-bar-flexible-content {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: min(100%, var(--page-max-width));
-  margin: 0 auto;
-  padding: 0 20px 24px;
-  pointer-events: none;
-  opacity: clamp(0, calc(1 - (var(--app-bar-progress) * 1.65)), 1);
-  transform: translateY(calc(var(--app-bar-progress) * 12px));
-  will-change: opacity, transform;
-}
-
-.expanded-app-title {
-  font-family: var(--md-ref-typeface-brand);
-  font-size: 40px;
-  font-weight: 500;
-  line-height: 48px;
-  text-shadow: 0 2px 8px rgb(0 0 0 / 55%);
 }
 
 .top-actions {
@@ -1192,13 +1171,10 @@ div.service-tile:active {
     --metadata-icon-size: 12px;
   }
 
-  .app-bar-flexible-content {
-    padding: 0 16px 20px;
-  }
-
-  .expanded-app-title {
-    font-size: 32px;
-    line-height: 40px;
+  .top-app-bar {
+    --expanded-title-size: 32px;
+    --expanded-title-indent: 0px;
+    --expanded-title-bottom: 20px;
   }
 
   .tile-title {
@@ -1219,11 +1195,5 @@ div.service-tile:active {
     grid-column: span 2;
     grid-row: span 1;
     aspect-ratio: 16 / 10;
-  }
-}
-
-@media (max-width: 430px) {
-  .app-title {
-    font-size: var(--type-title-large-size);
   }
 }
