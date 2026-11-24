@@ -939,7 +939,7 @@ div.service-tile:active {
   transform: scale(1.025);
 }
 
-.gallery-tile.is-viewing img {
+.gallery-tile.is-viewing {
   opacity: 0;
 }
 
@@ -1031,6 +1031,11 @@ div.service-tile:active {
   width: 100%;
 }
 
+.gallery-viewer.is-closing .viewer-footer {
+  opacity: 0;
+  transition: opacity 70ms ease-out;
+}
+
 .viewer-location {
   display: flex;
   align-items: center;
@@ -1078,17 +1083,15 @@ div.service-tile:active {
 
 #viewer-image {
   display: block;
-  width: auto;
+  width: 100%;
   height: auto;
-  max-width: 100%;
+  aspect-ratio: var(--viewer-image-aspect);
   max-height: min(72dvh, 720px);
   border-radius: calc(var(--media-radius) - 4px);
   object-fit: contain;
   transform: translate3d(0, 0, 0) scale(1);
   transform-origin: center;
-  transition:
-    opacity 180ms var(--motion-standard),
-    transform 240ms var(--motion-emphasized-decelerate);
+  transition: transform 240ms var(--motion-emphasized-decelerate);
   will-change: transform;
   -webkit-user-drag: none;
 }
@@ -1104,22 +1107,6 @@ div.service-tile:active {
 
 #viewer-loading[hidden] {
   display: none;
-}
-
-.gallery-viewer.is-loading #viewer-image {
-  opacity: 0.72;
-}
-
-.gallery-viewer.is-closing {
-  --md-dialog-container-color: transparent;
-}
-
-.gallery-viewer.is-closing .viewer-canvas {
-  background: transparent;
-}
-
-.gallery-viewer.is-closing .viewer-footer {
-  opacity: 0;
 }
 
 .gallery-viewer.is-zoomed .viewer-canvas {

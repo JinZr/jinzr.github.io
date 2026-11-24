@@ -421,7 +421,6 @@ function setupGallery() {
   const viewerCanvas = document.querySelector('#viewer-canvas');
   const viewerImage = document.querySelector('#viewer-image');
   const viewerLoading = document.querySelector('#viewer-loading');
-  const viewerFooter = document.querySelector('.viewer-footer');
   const closeButton = document.querySelector('#viewer-close-button');
 
   let viewerZoom = 1;
@@ -430,8 +429,7 @@ function setupGallery() {
   let previousPinchDistance = 0;
   let activeTile = null;
   let imageRequest = 0;
-  let heroAnimation = null;
-  let footerAnimation = null;
+  let tileFrame;
   const viewerPointers = new Map();
 
   const constrainViewerPan = () => {
@@ -477,10 +475,9 @@ function setupGallery() {
     updateViewerZoom();
   };
 
-  const setViewerLoading = (isLoading) => {
-    viewer.classList.toggle('is-loading', isLoading);
-    viewerCanvas.setAttribute('aria-busy', String(isLoading));
-    viewerLoading.hidden = !isLoading;
+  const finishLoading = () => {
+    viewerCanvas.setAttribute('aria-busy', 'false');
+    viewerLoading.hidden = true;
   };
 
   window.addEventListener('resize', updateViewerZoom);
@@ -547,154 +544,100 @@ function setupGallery() {
   viewerCanvas?.addEventListener('pointerup', stopViewerPan);
   viewerCanvas?.addEventListener('pointercancel', stopViewerPan);
 
-  const getHeroKeyframes = (opening) => {
-    const sourceRect = activeTile?.getBoundingClientRect();
-    const targetRect = viewerImage.getBoundingClientRect();
-    if (!sourceRect?.width || !targetRect.width) return null;
+  const getTileFrame = (dialog) => {
+    const tile = activeTile.getBoundingClientRect();
+    const thumbnail = activeTile.querySelector('img').getBoundingClientRect();
+    const canvas = viewerCanvas.getBoundingClientRect();
+    const box = dialog.getBoundingClientRect();
+    const scale = Math.max(thumbnail.width / canvas.width, thumbnail.height / canvas.height);
+    const centerX = canvas.left - box.left + canvas.width / 2;
+    const centerY = canvas.top - box.top + canvas.height / 2;
+    const x = tile.left + tile.width / 2 - box.left - centerX * scale;
+    const y = tile.top + tile.height / 2 - box.top - centerY * scale;
 
-    const scale = Math.max(
-      sourceRect.width / targetRect.width,
-      sourceRect.height / targetRect.height,
-    );
-    const visibleWidth = sourceRect.width / scale;
-    const visibleHeight = sourceRect.height / scale;
-    const clipX = Math.max(0, (targetRect.width - visibleWidth) / 2);
-    const clipY = Math.max(0, (targetRect.height - visibleHeight) / 2);
-    const translateX = sourceRect.left + (sourceRect.width / 2) - targetRect.left - (targetRect.width / 2);
-    const translateY = sourceRect.top + (sourceRect.height / 2) - targetRect.top - (targetRect.height / 2);
-    const sourceRadius = Number.parseFloat(getComputedStyle(activeTile).borderRadius) / scale;
-    const targetRadius = Number.parseFloat(getComputedStyle(viewerImage).borderRadius);
-    const sourceFrame = {
-      transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
-      clipPath: `inset(${clipY}px ${clipX}px ${clipY}px ${clipX}px round ${sourceRadius}px)`,
-      borderRadius: `${sourceRadius}px`,
-    };
-    const targetFrame = {
-      transform: 'translate3d(0, 0, 0) scale(1)',
-      clipPath: `inset(0 0 0 0 round ${targetRadius}px)`,
-      borderRadius: `${targetRadius}px`,
-    };
-    return opening ? [sourceFrame, targetFrame] : [targetFrame, sourceFrame];
-  };
-
-  const animateHero = (opening, duration) => {
-    heroAnimation?.cancel();
-    const keyframes = getHeroKeyframes(opening);
-    if (!keyframes) return;
-    if (opening) activeTile.classList.add('is-viewing');
-    const animation = viewerImage.animate(keyframes, {
-      duration,
-      easing: opening ? 'cubic-bezier(.05,.7,.1,1)' : 'cubic-bezier(.3,0,.8,.15)',
-      fill: 'both',
-    });
-    heroAnimation = animation;
-    animation.finished.catch(() => {}).then(() => {
-      if (heroAnimation !== animation) return;
-      animation.cancel();
-      heroAnimation = null;
-    });
-  };
-
-  const animateFooter = (keyframes, options) => {
-    footerAnimation?.cancel();
-    const animation = viewerFooter.animate(keyframes, { ...options, fill: 'both' });
-    footerAnimation = animation;
-    animation.finished.catch(() => {}).then(() => {
-      if (footerAnimation !== animation) return;
-      animation.cancel();
-      footerAnimation = null;
-    });
-  };
-
-  viewer.getOpenAnimation = () => {
-    animateHero(true, 460);
-    animateFooter(
-      [
-        { opacity: 0, transform: 'translateY(8px)' },
-        { opacity: 0, transform: 'translateY(8px)', offset: 0.42 },
-        { opacity: 1, transform: 'translateY(0)' },
-      ],
-      { duration: 460, easing: 'cubic-bezier(.05,.7,.1,1)' },
-    );
+    // Match the thumbnail's centered cover crop inside the full dialog.
+    const halfWidth = tile.width / (2 * scale);
+    const halfHeight = tile.height / (2 * scale);
+    const top = centerY - halfHeight;
+    const right = box.width - centerX - halfWidth;
+    const bottom = box.height - centerY - halfHeight;
+    const left = centerX - halfWidth;
+    const radius = Number.parseFloat(getComputedStyle(activeTile).borderRadius) / scale;
     return {
-      dialog: [
-        [
-          [{ opacity: 1 }, { opacity: 1 }],
-          { duration: 460 },
-        ],
-      ],
-      scrim: [
-        [
-          [{ opacity: 0 }, { opacity: 0.32 }],
-          { duration: 300, easing: 'linear' },
-        ],
-      ],
-      container: [
-        [
-          [{ opacity: 0 }, { opacity: 0, offset: 0.34 }, { opacity: 1 }],
-          { duration: 460, easing: 'linear', pseudoElement: '::before' },
-        ],
-      ],
+      transformOrigin: 'top left',
+      transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+      clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round ${radius}px)`,
     };
   };
 
-  viewer.getCloseAnimation = () => {
-    animateHero(false, 260);
-    animateFooter(
-      [{ opacity: 1 }, { opacity: 0 }],
-      { duration: 120, easing: 'linear' },
-    );
+  const getViewerAnimation = (opening) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return {};
+    const dialog = viewer.shadowRoot.querySelector('dialog');
+    const style = getComputedStyle(dialog);
+    const openingProgress = opening ? null : dialog.getAnimations()[0]?.effect.getComputedTiming().progress;
+    const interrupted = openingProgress != null;
+    if (!interrupted) tileFrame = getTileFrame(dialog);
+    const dialogFrame = {
+      transformOrigin: 'top left',
+      transform: interrupted ? style.transform : 'translate3d(0, 0, 0) scale(1)',
+      clipPath: interrupted ? style.clipPath : `inset(0px round ${style.borderRadius})`,
+    };
+    const timing = {
+      duration: opening ? 360 : 260 * (openingProgress ?? 1),
+      easing: opening ? 'cubic-bezier(.2,0,.2,1)' : 'cubic-bezier(.35,0,.25,1)',
+    };
+    if (!opening && (viewerZoom !== 1 || viewerImage.getAnimations().length)) {
+      viewerImage.animate([
+        { transform: getComputedStyle(viewerImage).transform },
+        { transform: 'none' },
+      ], { ...timing, fill: 'forwards' });
+    }
+    const frames = opening ? [tileFrame, dialogFrame] : [dialogFrame, tileFrame];
+    const scrim = viewer.shadowRoot.querySelector('.scrim');
     return {
-      dialog: [
-        [
-          [{ opacity: 1 }, { opacity: 1 }],
-          { duration: 260 },
-        ],
-      ],
-      scrim: [
-        [
-          [{ opacity: 0.32 }, { opacity: 0 }],
-          { duration: 260, easing: 'linear' },
-        ],
-      ],
-      container: [
-        [
-          [{ opacity: 1 }, { opacity: 0 }],
-          { delay: 90, duration: 170, easing: 'linear', pseudoElement: '::before' },
-        ],
-      ],
+      dialog: [[frames, timing]],
+      scrim: [[
+        opening ? [{ opacity: 0 }, { opacity: 0.32 }] : [{ opacity: getComputedStyle(scrim).opacity }, { opacity: 0 }],
+        opening ? { ...timing, easing: 'linear' } : timing,
+      ]],
     };
   };
 
-  const loadFullImage = async (src, request) => {
+  viewer.getOpenAnimation = () => getViewerAnimation(true);
+  viewer.getCloseAnimation = () => getViewerAnimation(false);
+
+  const loadFullImage = async (src, request, opened) => {
     const fullImage = new Image();
     fullImage.src = src;
     try {
-      await fullImage.decode();
+      await Promise.all([fullImage.decode(), opened]);
     } catch {
-      if (request === imageRequest) setViewerLoading(false);
+      if (request === imageRequest) finishLoading();
       return;
     }
     if (request !== imageRequest) return;
     viewerImage.src = src;
-    setViewerLoading(false);
+    finishLoading();
   };
 
-  const closeViewer = () => {
-    viewer.open = false;
-  };
-
-  closeButton?.addEventListener('click', closeViewer);
-  viewer?.addEventListener('close', () => {
-    imageRequest += 1;
+  closeButton?.addEventListener('click', () => viewer.close());
+  viewer?.addEventListener('opened', () => {
+    viewerLoading.hidden = viewerCanvas.getAttribute('aria-busy') !== 'true';
+  });
+  viewer?.addEventListener('close', (event) => {
+    if (viewer.classList.contains('is-closing')) {
+      event.preventDefault();
+      return;
+    }
     viewer.classList.add('is-closing');
-    resetViewerZoom();
-    setViewerLoading(false);
+    imageRequest += 1;
+    finishLoading();
   });
   viewer?.addEventListener('closed', () => {
     viewer.classList.remove('is-closing');
+    viewerImage.getAnimations().forEach((animation) => animation.cancel());
     resetViewerZoom();
-    setViewerLoading(false);
+    finishLoading();
     viewerImage.removeAttribute('src');
     activeTile?.classList.remove('is-viewing');
     activeTile = null;
@@ -707,10 +650,10 @@ function setupGallery() {
     button.type = 'button';
     button.setAttribute('aria-label', `Open full image for ${item.title}`);
     button.addEventListener('click', () => {
-      viewer.classList.remove('is-closing');
       activeTile = button;
+      activeTile.classList.add('is-viewing');
       resetViewerZoom();
-      setViewerLoading(true);
+      viewerCanvas.setAttribute('aria-busy', 'true');
       viewerTitle.textContent = item.title;
       viewerImage.alt = `Polaroid photo from ${item.title}`;
       viewerImage.width = item.width;
@@ -718,8 +661,8 @@ function setupGallery() {
       viewer.style.setProperty('--viewer-image-aspect', item.width / item.height);
       viewerImage.src = image.currentSrc || image.src;
       const request = ++imageRequest;
-      viewer.open = true;
-      loadFullImage(publicUrl(item.full), request);
+      const opened = viewer.show();
+      loadFullImage(publicUrl(item.full), request, opened);
     });
 
     const image = document.createElement('img');
