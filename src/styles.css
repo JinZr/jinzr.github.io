@@ -654,9 +654,12 @@ md-divider {
   -webkit-line-clamp: 3;
 }
 
-.contrib-tile .tile-title,
-.thesis-tile .tile-title {
+.contrib-tile .tile-title {
   -webkit-line-clamp: 2;
+}
+
+.thesis-tile .tile-title {
+  -webkit-line-clamp: unset;
 }
 
 .tile-support {
@@ -1138,6 +1141,20 @@ div.service-tile:active {
     transform 500ms var(--motion-emphasized-decelerate);
 }
 
+@media (min-width: 1000px) {
+  .bio-body {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 24px;
+    align-items: start;
+  }
+
+  .bio-body .section-panel {
+    grid-row: span 2;
+  }
+}
+
 @media (max-width: 1100px) {
   .wide-action {
     display: none;
@@ -1186,7 +1203,7 @@ div.service-tile:active {
     -webkit-line-clamp: 2;
   }
 
-  :is(.publication-tile, .thesis-tile) .tile-title {
+  .publication-tile .tile-title {
     -webkit-line-clamp: unset;
   }
 
