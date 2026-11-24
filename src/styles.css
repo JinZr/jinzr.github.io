@@ -1209,3 +1209,47 @@ div.service-tile:active {
     aspect-ratio: 16 / 10;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-property: none !important;
+    animation-name: none !important;
+  }
+
+  .app-title {
+    top: 16px;
+    bottom: auto;
+    left: 16px;
+    font-size: var(--type-title-large-size);
+  }
+
+  .reveal {
+    opacity: 1;
+  }
+
+  .top-app-bar::before,
+  .reveal,
+  .section-header md-icon,
+  .content-tile,
+  .gallery-tile,
+  .gallery-tile img,
+  .gallery-tile-label,
+  .top-actions button,
+  md-filled-button,
+  md-text-button,
+  md-icon-button,
+  md-outlined-segmented-button {
+    transform: none !important;
+  }
+
+  .toast,
+  .toast.visible {
+    transform: translateX(-50%);
+  }
+}

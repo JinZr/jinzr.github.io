@@ -12,6 +12,7 @@ import './styles.css';
 const baseUrl = import.meta.env.BASE_URL || './';
 const publicUrl = (path) => new URL(`${baseUrl}${path}`, window.location.href).toString();
 const googleAnalyticsId = 'G-4SJNNRFW4C';
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const galleryItems = [
   { image: 'assets/images/egs/egs1.webp', full: 'assets/images/egs_highres/egs1.webp', title: 'Dalian', width: 805, height: 978 },
@@ -282,7 +283,7 @@ function renderPublicationFilters(items) {
 
     selectedTheme = themes[event.detail.index];
     renderPublications(items, selectedTheme);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (reducedMotion.matches) return;
 
     const endHeight = list.getBoundingClientRect().height;
     list.animate([
@@ -508,7 +509,7 @@ function setupGallery() {
   };
 
   const getViewerAnimation = (opening) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return {};
+    if (reducedMotion.matches) return {};
     const dialog = viewer.shadowRoot.querySelector('dialog');
     const style = getComputedStyle(dialog);
     const openingProgress = opening ? null : dialog.getAnimations()[0]?.effect.getComputedTiming().progress;
@@ -623,7 +624,7 @@ function setupGallery() {
 
 function setupReveal() {
   const targets = [...document.querySelectorAll('.reveal')];
-  if (!('IntersectionObserver' in window)) {
+  if (reducedMotion.matches || !('IntersectionObserver' in window)) {
     targets.forEach((target) => target.classList.add('is-visible'));
     return;
   }
