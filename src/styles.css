@@ -596,10 +596,6 @@ md-divider {
   line-height: var(--type-body-large-line-height);
 }
 
-.bio-body p {
-  max-inline-size: 72ch;
-}
-
 .bio-body p + p {
   margin-block-start: var(--section-gap);
 }
