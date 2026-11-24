@@ -237,31 +237,28 @@ md-icon,
 }
 
 .top-app-bar {
-  --app-bar-collapse: 0px;
   --app-bar-progress: 0;
   --app-bar-open: calc(1 - var(--app-bar-progress));
-  --expanded-title-size: 40px;
-  --expanded-title-indent: max(4px, calc((100% - var(--page-max-width)) / 2 + 4px));
-  --expanded-title-bottom: 24px;
+  --app-bar-range: calc(var(--app-bar-expanded-height) - var(--app-bar-collapsed-height));
+  --app-bar-collapse: calc(var(--app-bar-range) * var(--app-bar-progress));
+  --expanded-title-scale: 2.5;
+  --expanded-title-indent: max(4px, calc((100vw - var(--page-max-width)) / 2 + 4px));
+  --expanded-title-lift: -8px;
   --app-bar-foreground: color-mix(
     in srgb,
     #ffffff calc((1 - var(--app-bar-progress)) * 100%),
     var(--md-sys-color-on-primary) calc(var(--app-bar-progress) * 100%)
   );
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
+  position: sticky;
+  top: calc(-1 * var(--app-bar-range));
   z-index: 10;
-  overflow: hidden;
-  height: calc(var(--app-bar-expanded-height) - var(--app-bar-collapse));
-  min-height: var(--app-bar-collapsed-height);
+  overflow: clip;
+  height: var(--app-bar-expanded-height);
   background: var(--md-sys-color-surface);
   box-shadow: none;
   color: var(--app-bar-foreground);
   isolation: isolate;
   transition: box-shadow 350ms var(--motion-standard);
-  will-change: height;
 }
 
 .top-app-bar::before,
@@ -273,7 +270,6 @@ md-icon,
 
 .top-app-bar::before {
   z-index: -2;
-  height: var(--app-bar-expanded-height);
   background:
     linear-gradient(
       180deg,
@@ -282,7 +278,8 @@ md-icon,
       rgb(5 9 24 / 74%) 100%
     ),
     url('/assets/images/app-bar-background.webp') center 52% / cover no-repeat;
-  transform: translateY(calc(var(--app-bar-collapse) * -0.18));
+  /* Offset most of the header's upward travel for a subtle parallax effect. */
+  transform: translateY(calc(var(--app-bar-collapse) * 0.82));
   will-change: transform;
 }
 
@@ -299,11 +296,9 @@ md-icon,
     0 4px 12px 3px color-mix(in srgb, var(--md-sys-color-shadow) 14%, transparent);
 }
 
-.app-bar-spacer {
-  height: var(--app-bar-expanded-height);
-}
-
 .app-bar-toolbar {
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -313,13 +308,20 @@ md-icon,
 
 .app-title {
   position: absolute;
-  left: calc(16px + var(--expanded-title-indent) * var(--app-bar-open));
-  bottom: calc(16px + (var(--expanded-title-bottom) - 16px) * var(--app-bar-open));
+  left: 16px;
+  bottom: calc((var(--app-bar-collapsed-height) - var(--type-title-large-size)) / 2);
   pointer-events: none;
   font-family: var(--md-ref-typeface-brand);
-  font-size: calc(var(--type-title-large-size) + (var(--expanded-title-size) - var(--type-title-large-size)) * var(--app-bar-open));
+  font-size: calc(var(--type-title-large-size) * var(--expanded-title-scale));
   font-weight: var(--type-title-large-weight);
-  line-height: calc(1em + 8px);
+  line-height: 1;
+  transform-origin: bottom left;
+  transform:
+    translate(
+      calc(var(--expanded-title-indent) * var(--app-bar-open)),
+      calc(var(--expanded-title-lift) * var(--app-bar-open))
+    )
+    scale(calc(var(--app-bar-open) + var(--app-bar-progress) / var(--expanded-title-scale)));
   text-shadow: 0 1px 3px rgb(0 0 0 / 45%);
   white-space: nowrap;
 }
@@ -1180,9 +1182,9 @@ div.service-tile:active {
   }
 
   .top-app-bar {
-    --expanded-title-size: 32px;
+    --expanded-title-scale: 2;
     --expanded-title-indent: 0px;
-    --expanded-title-bottom: 20px;
+    --expanded-title-lift: -4px;
   }
 
   .tile-title {
@@ -1223,13 +1225,18 @@ div.service-tile:active {
   }
 
   .app-title {
+    position: fixed;
     top: 16px;
     bottom: auto;
-    left: 16px;
     font-size: var(--type-title-large-size);
+    line-height: var(--type-title-large-line-height);
+    transform: none;
   }
 
-  .top-app-bar::before,
+  .top-app-bar::before {
+    transform: translateY(var(--app-bar-collapse));
+  }
+
   .section-header md-icon,
   .content-tile,
   .gallery-tile,

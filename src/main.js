@@ -87,30 +87,22 @@ function setupTopAppBarElevation() {
   const topAppBar = document.querySelector('.top-app-bar');
   if (!topAppBar) return;
 
-  let updatePending = false;
+  let collapseRange;
 
   const updateScrolledUnder = () => {
-    const styles = getComputedStyle(topAppBar);
-    const expandedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-expanded-height'));
-    const collapsedHeight = Number.parseFloat(styles.getPropertyValue('--app-bar-collapsed-height'));
-    const collapseRange = expandedHeight - collapsedHeight;
-    const collapse = Math.max(0, Math.min(window.scrollY, collapseRange));
-
-    topAppBar.style.setProperty('--app-bar-collapse', `${collapse}px`);
-    topAppBar.style.setProperty('--app-bar-progress', (collapse / collapseRange).toFixed(4));
-    topAppBar.classList.toggle('scrolled-under', window.scrollY > collapseRange);
-    updatePending = false;
+    const scroll = window.scrollY;
+    topAppBar.style.setProperty('--app-bar-progress', Math.min(1, Math.max(0, scroll / collapseRange)));
+    topAppBar.classList.toggle('scrolled-under', scroll > collapseRange);
   };
 
-  const requestUpdate = () => {
-    if (updatePending) return;
-    updatePending = true;
-    requestAnimationFrame(updateScrolledUnder);
+  const updateRange = () => {
+    collapseRange = -parseFloat(getComputedStyle(topAppBar).top);
+    updateScrolledUnder();
   };
 
-  updateScrolledUnder();
-  window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', requestUpdate);
+  updateRange();
+  window.addEventListener('scroll', updateScrolledUnder, { passive: true });
+  window.addEventListener('resize', updateRange);
 }
 
 function setupZoomLock() {
