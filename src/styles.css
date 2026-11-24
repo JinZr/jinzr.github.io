@@ -1182,6 +1182,10 @@ div.service-tile:active {
     -webkit-line-clamp: 2;
   }
 
+  :is(.publication-tile, .thesis-tile) .tile-title {
+    -webkit-line-clamp: unset;
+  }
+
   .tile-support {
     line-height: var(--type-body-medium-compact-line-height);
     -webkit-line-clamp: 2;
