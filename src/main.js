@@ -622,33 +622,6 @@ function setupGallery() {
   wrapper.replaceChildren(...tiles);
 }
 
-function setupReveal() {
-  const targets = [...document.querySelectorAll('.reveal')];
-  if (reducedMotion.matches || !('IntersectionObserver' in window)) {
-    targets.forEach((target) => target.classList.add('is-visible'));
-    return;
-  }
-
-  targets.forEach((target, index) => {
-    if (index <= 1) {
-      target.classList.add('is-visible');
-      return;
-    }
-    target.style.transitionDelay = `${80 * (index - 1)}ms`;
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
-
-  targets.slice(2).forEach((target) => observer.observe(target));
-}
-
 setupZoomLock();
 setupAnalytics();
 setupTopAppBarElevation();
@@ -656,7 +629,6 @@ setupLinks();
 setupEmailCopy();
 setupContent();
 setupGallery();
-setupReveal();
 
 const footer = document.querySelector('.site-footer');
 if (footer) {

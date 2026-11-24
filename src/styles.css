@@ -1128,19 +1128,6 @@ div.service-tile:active {
   transform: translate(-50%, 0) scale(1);
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(24px) scale(0.985);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  transition:
-    opacity 400ms var(--motion-standard),
-    transform 500ms var(--motion-emphasized-decelerate);
-}
-
 @media (min-width: 1000px) {
   .bio-body {
     display: grid;
@@ -1242,12 +1229,7 @@ div.service-tile:active {
     font-size: var(--type-title-large-size);
   }
 
-  .reveal {
-    opacity: 1;
-  }
-
   .top-app-bar::before,
-  .reveal,
   .section-header md-icon,
   .content-tile,
   .gallery-tile,
