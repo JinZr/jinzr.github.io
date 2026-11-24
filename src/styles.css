@@ -33,8 +33,8 @@
   --type-title-large-size: 16px;
   --type-title-large-line-height: 24px;
   --type-title-large-weight: 500;
-  --type-card-header-size: 24px;
-  --type-card-header-line-height: 32px;
+  --type-card-header-size: 22px;
+  --type-card-header-line-height: 28px;
   --type-card-header-weight: 475;
   --type-title-medium-size: 16px;
   --type-title-medium-line-height: 24px;
@@ -574,14 +574,11 @@ md-outlined-segmented-button:active {
 
 h1,
 h2 {
-  overflow: hidden;
   margin: 0;
   font-family: var(--md-ref-typeface-brand);
   font-size: var(--type-card-header-size);
   font-weight: var(--type-card-header-weight);
   line-height: var(--type-card-header-line-height);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 md-divider {
@@ -1176,8 +1173,7 @@ div.service-tile:active {
 
   :root {
     --app-bar-expanded-height: 220px;
-    --type-card-header-size: 22px;
-    --type-card-header-line-height: 28px;
+    --type-card-header-size: 20px;
     --container-radius: 14px;
     --card-padding-horizontal: 12px;
     --card-padding-top: 8px;
